@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Real Estate Cloud Brokerage Comparison Calculator
+
+A web application that helps real estate agents compare earnings between different cloud brokerages. Agents can input their production data and see side-by-side financial comparisons to make informed decisions about their brokerage choice.
+
+## Features
+
+- **Commission Calculator**: Compare net income after splits, caps, and fees
+- **Side-by-side Comparison**: Clear visualization of earnings across brokerages
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Professional UI**: Clean, modern interface built with Tailwind CSS
+
+## Supported Brokerages
+
+- **Real Brokerage**: 85/15 split, $12K cap
+- **eXp Realty**: 80/20 split, $16K cap  
+- **Epique Realty**: 85/15 split, $15K cap
+- **LPT Realty**: 80/20 split, $15K cap
+
+## Tech Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Styling**: Tailwind CSS
+- **Language**: TypeScript
+- **State Management**: React hooks
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone and install dependencies:**
+   ```bash
+   git clone <repository-url>
+   cd brokerage-calculator
+   npm install
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. **Open your browser:**
+   Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How to Use
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Visit the Landing Page**: Learn about the tool and its features
+2. **Navigate to Calculator**: Click "Get Started" or "Start Comparison"
+3. **Enter Your Data**:
+   - Annual Gross Commission Income (GCI) - Required
+   - Number of Transactions - Optional
+   - Potential Recruits - Optional (for future revenue share features)
+4. **View Results**: See your personalized comparison across all brokerages
+5. **Analyze**: Use the detailed breakdown table to understand the numbers
 
-## Learn More
+## Commission Calculation Logic
 
-To learn more about Next.js, take a look at the following resources:
+The calculator uses the following logic for each brokerage:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Before Cap**: Agent receives their split percentage of gross commission
+- **After Cap**: Once the brokerage receives their cap amount, agent keeps 100% of remaining commissions
+- **Net Income**: Total commission earnings after all brokerage fees
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Future Enhancements
 
-## Deploy on Vercel
+- Revenue share calculator for recruiting income
+- Additional brokerage comparisons
+- Transaction fee calculations
+- Annual projection tools
+- Export/save functionality
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project was built to help real estate agents make informed decisions about their brokerage choice. Contributions and suggestions are welcome!
+
+## License
+
+Built for educational and comparison purposes. Not affiliated with any brokerage mentioned.
