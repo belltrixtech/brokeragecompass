@@ -1,0 +1,38 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for better contrast -->
+  <circle cx="256" cy="256" r="256" fill="#f8fafc"/>
+  
+  <!-- Outer compass ring -->
+  <circle cx="256" cy="256" r="240" fill="none" stroke="#475569" stroke-width="32"/>
+  
+  <!-- Inner compass face -->
+  <circle cx="256" cy="256" r="180" fill="#ffffff" stroke="#06b6d4" stroke-width="16"/>
+  
+  <!-- Major direction arrows -->
+  <path d="M256 96 L224 176 L256 144 L288 176 Z" fill="#06b6d4"/>
+  <path d="M256 416 L224 336 L256 368 L288 336 Z" fill="#475569"/>
+  <path d="M416 256 L336 224 L368 256 L336 288 Z" fill="#64748b"/>
+  <path d="M96 256 L176 224 L144 256 L176 288 Z" fill="#64748b"/>
+  
+  <!-- Direction markings */
+  <g stroke="#475569" stroke-width="8" fill="none">
+    <line x1="256" y1="40" x2="256" y2="80"/>
+    <line x1="472" y1="256" x2="432" y2="256"/>
+    <line x1="256" y1="472" x2="256" y2="432"/>
+    <line x1="40" y1="256" x2="80" y2="256"/>
+  </g>
+  
+  <!-- Diagonal markings -->
+  <g stroke="#64748b" stroke-width="6" fill="none">
+    <line x1="381" y1="131" x2="361" y2="151"/>
+    <line x1="381" y1="381" x2="361" y2="361"/>
+    <line x1="131" y1="381" x2="151" y2="361"/>
+    <line x1="131" y1="131" x2="151" y2="151"/>
+  </g>
+  
+  <!-- Center point -->
+  <circle cx="256" cy="256" r="24" fill="#475569"/>
+  
+  <!-- Brand text (optional for larger sizes) -->
+  <text x="256" y="480" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="600" text-anchor="middle" fill="#475569">BrokerageCompass</text>
+</svg>
