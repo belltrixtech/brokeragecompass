@@ -6,6 +6,20 @@ import Image from 'next/image';
 import { BrokerageCompassIcon } from '../../components/Logo';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { 
+  trackCalculatorUsage, 
+  trackBrokerageComparison, 
+  trackPDFDownload, 
+  trackShareAction, 
+  trackPageView, 
+  trackConversionEvent,
+  trackCalculatorScenario,
+  trackFormInteraction
+} from '../../utils/analytics';
+import { 
+  CalculatorButton, 
+  NavigationButton 
+} from '../../components/TrackedButton';
 
 interface BrokerageData {
   name: string;
@@ -330,6 +344,15 @@ export default function Calculator() {
   const [results, setResults] = useState<CalculationResult[]>([]);
   const [showCapTimeline, setShowCapTimeline] = useState<boolean>(false);
   const [isCalculating, setIsCalculating] = useState<boolean>(false);
+
+  // Track calculator page view
+  useEffect(() => {
+    trackPageView('calculator', {
+      user_agent: navigator.userAgent,
+      timestamp: new Date().toISOString()
+    });
+    trackConversionEvent('calculator_page_viewed');
+  }, []);
   
   // New transaction fee states
   const [customTransactionFees, setCustomTransactionFees] = useState<boolean>(false);
@@ -453,6 +476,22 @@ export default function Calculator() {
     const url = generateShareableURL(calculationData);
     setShareUrl(url);
     setShowShareModal(true);
+    
+    // Track share action
+    const bestResult = results.find(r => !r.isCurrentBrokerage) || results[0];
+    if (bestResult && gci) {
+      trackShareAction('link', {
+        gci: parseFloat(gci),
+        bestBrokerage: bestResult.brokerage.name,
+        savingsAmount: bestResult.differenceFromCurrent
+      });
+    }
+    
+    // Track conversion event
+    trackConversionEvent('share_modal_opened', {
+      gci: parseFloat(gci) || 0,
+      results_count: results.length
+    });
   };
 
   const copyToClipboard = async (text: string) => {
@@ -460,6 +499,12 @@ export default function Calculator() {
       await navigator.clipboard.writeText(text);
       setShowCopySuccess(true);
       setTimeout(() => setShowCopySuccess(false), 2000);
+      
+      // Track copy action
+      trackConversionEvent('share_link_copied', {
+        gci: parseFloat(gci) || 0,
+        method: 'clipboard_api'
+      });
     } catch (err) {
       // Fallback for older browsers
       const textArea = document.createElement('textarea');
@@ -472,6 +517,12 @@ export default function Calculator() {
       document.body.removeChild(textArea);
       setShowCopySuccess(true);
       setTimeout(() => setShowCopySuccess(false), 2000);
+      
+      // Track copy action
+      trackConversionEvent('share_link_copied', {
+        gci: parseFloat(gci) || 0,
+        method: 'fallback'
+      });
     }
   };
 
@@ -793,6 +844,24 @@ export default function Calculator() {
       // Save PDF
       pdf.save(filename);
       
+      // Track PDF download
+      const bestResult = results.find(r => !r.isCurrentBrokerage) || results[0];
+      if (bestResult) {
+        trackPDFDownload({
+          gci: parseFloat(gci),
+          bestBrokerage: bestResult.brokerage.name,
+          savingsAmount: bestResult.differenceFromCurrent,
+          includesRevenueShare: parseFloat(recruits) > 0
+        });
+      }
+      
+      // Track conversion event
+      trackConversionEvent('pdf_exported', {
+        gci: parseFloat(gci),
+        filename: filename,
+        results_count: results.length
+      });
+      
       // Show success message
       setShowPDFSuccess(true);
       setTimeout(() => setShowPDFSuccess(false), 3000);
@@ -807,6 +876,14 @@ export default function Calculator() {
   };
 
   const loadScenario = (scenario: Scenario) => {
+    // Track scenario selection
+    trackConversionEvent('scenario_selected', {
+      scenario_name: scenario.name,
+      gci: parseFloat(scenario.gci),
+      transactions: parseFloat(scenario.transactions),
+      recruits: parseFloat(scenario.recruits)
+    });
+    
     setGci(scenario.gci);
     setTransactions(scenario.transactions);
     setRecruits(scenario.recruits);
@@ -1097,6 +1174,19 @@ export default function Calculator() {
       return;
     }
 
+    // Track calculator usage
+    trackCalculatorUsage({
+      gci: grossCommission,
+      transactions: numTransactions,
+      currentBrokerage: showCurrentBrokerage ? 'Custom Current Brokerage' : 'Not Specified',
+      recruitedAgents: numRecruits
+    });
+
+    // Track calculator scenario
+    const scenarioType = grossCommission >= 300000 ? 'high_producer' : 
+                        grossCommission >= 150000 ? 'high_volume' : 
+                        grossCommission >= 80000 ? 'mid_volume' : 'low_volume';
+
     setIsCalculating(true);
     
     // Calculate current brokerage if enabled
@@ -1315,6 +1405,31 @@ export default function Calculator() {
       }
 
     setResults(finalResults);
+    
+    // Track brokerage comparison
+    const comparedBrokerages = finalResults.map(result => result.brokerage.name);
+    trackBrokerageComparison(comparedBrokerages);
+    
+    // Track calculator scenario with results
+    if (finalResults.length > 0) {
+      const topResult = finalResults.find(r => !r.isCurrentBrokerage) || finalResults[0];
+      trackCalculatorScenario({
+        gci: grossCommission,
+        transactions: numTransactions,
+        currentBrokerage: showCurrentBrokerage ? 'Custom Current Brokerage' : 'Not Specified',
+        topSavingsBrokerage: topResult.brokerage.name,
+        maxSavings: topResult.differenceFromCurrent,
+        scenarioType: scenarioType
+      });
+    }
+    
+    // Track conversion event
+    trackConversionEvent('calculator_results_generated', {
+      gci: grossCommission,
+      brokerages_compared: comparedBrokerages.length,
+      includes_current: showCurrentBrokerage
+    });
+    
     setIsCalculating(false);
   };
 
@@ -1748,13 +1863,14 @@ export default function Calculator() {
                 </svg>
                 Customize
               </button>
-              <Link
-                href="/"
+                            <NavigationButton
+                trackingName="back_to_home"
+                href="/" 
                 className="font-semibold transition-colors"
                 style={{ color: brandingConfig.primaryColor }}
               >
                 ← Back to Home
-              </Link>
+              </NavigationButton>
             </div>
           </div>
         </div>
@@ -2962,18 +3078,18 @@ export default function Calculator() {
                       Try a quick scenario above or enter your data to see comprehensive financial projections
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <button
+                      <CalculatorButton
+                        trackingName="try_example_experienced"
                         onClick={() => loadScenario(scenarios[1])}
-                        className="bg-cyan-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
                       >
                         Try Example: Experienced Agent
-                      </button>
-                      <button
+                      </CalculatorButton>
+                      <CalculatorButton
+                        trackingName="try_example_team_leader"
                         onClick={() => loadScenario(scenarios[2])}
-                        className="bg-cyan-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
                       >
                         Try Example: Team Leader
-                      </button>
+                      </CalculatorButton>
                     </div>
                   </>
                 )}

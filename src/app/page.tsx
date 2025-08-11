@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrokerageCompassIcon, BrokerageCompassLogoWithText } from '../components/Logo';
 import { motion } from 'framer-motion';
 import { 
@@ -15,6 +15,17 @@ import {
   AnimatedButton,
   AnimatedCard
 } from '../components/Animations';
+import { 
+  HeroButton, 
+  SecondaryButton, 
+  NavigationButton, 
+  DemoButton 
+} from '../components/TrackedButton';
+import { 
+  trackDemoUsage, 
+  trackPageView, 
+  trackConversionEvent 
+} from '../utils/analytics';
 
 // Interactive Demo Component
 const InteractiveDemoSection = () => {
@@ -31,6 +42,14 @@ const InteractiveDemoSection = () => {
     savings: 0,
     savingsPercentage: '0'
   });
+
+  // Track demo interaction on first load
+  useEffect(() => {
+    trackConversionEvent('demo_viewed', {
+      initial_gci: demoInputs.gci,
+      initial_transactions: demoInputs.transactions
+    });
+  }, []);
 
   // Calculate results in real-time
   useEffect(() => {
@@ -60,6 +79,29 @@ const InteractiveDemoSection = () => {
 
     calculateDemoResults();
   }, [demoInputs]);
+
+  // Track demo input changes
+  const handleInputChange = (field: string, value: number) => {
+    const newInputs = { ...demoInputs, [field]: value };
+    setDemoInputs(newInputs);
+    
+    // Track demo usage
+    trackDemoUsage('input_changed', {
+      field: field,
+      value: value,
+      gci: newInputs.gci,
+      savings: demoResults.savings
+    });
+  };
+
+  // Track CTA button clicks
+  const handleGetCompleteAnalysis = () => {
+    trackConversionEvent('demo_to_calculator', {
+      gci: demoInputs.gci,
+      transactions: demoInputs.transactions,
+      potential_savings: demoResults.savings
+    });
+  };
 
   return (
     <section className="py-16 bg-gradient-to-br from-slate-50 via-white to-cyan-50">
@@ -93,7 +135,7 @@ const InteractiveDemoSection = () => {
                   <input
                     type="number"
                     value={demoInputs.gci}
-                    onChange={(e) => setDemoInputs(prev => ({ ...prev, gci: parseInt(e.target.value) || 0 }))}
+                    onChange={(e) => handleInputChange('gci', parseInt(e.target.value) || 0)}
                     className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-lg"
                   />
                 </div>
@@ -103,7 +145,7 @@ const InteractiveDemoSection = () => {
                   max="300000"
                   step="5000"
                   value={demoInputs.gci}
-                  onChange={(e) => setDemoInputs(prev => ({ ...prev, gci: parseInt(e.target.value) }))}
+                  onChange={(e) => handleInputChange('gci', parseInt(e.target.value))}
                   className="w-full mt-2 accent-cyan-500"
                 />
               </div>
@@ -115,7 +157,7 @@ const InteractiveDemoSection = () => {
                 <input
                   type="number"
                   value={demoInputs.transactions}
-                  onChange={(e) => setDemoInputs(prev => ({ ...prev, transactions: parseInt(e.target.value) || 0 }))}
+                  onChange={(e) => handleInputChange('transactions', parseInt(e.target.value) || 0)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-lg"
                 />
                 <input
@@ -124,7 +166,7 @@ const InteractiveDemoSection = () => {
                   max="100"
                   step="1"
                   value={demoInputs.transactions}
-                  onChange={(e) => setDemoInputs(prev => ({ ...prev, transactions: parseInt(e.target.value) }))}
+                  onChange={(e) => handleInputChange('transactions', parseInt(e.target.value))}
                   className="w-full mt-2 accent-cyan-500"
                 />
               </div>
@@ -140,7 +182,7 @@ const InteractiveDemoSection = () => {
                     max="95"
                     step="5"
                     value={demoInputs.currentSplit}
-                    onChange={(e) => setDemoInputs(prev => ({ ...prev, currentSplit: parseInt(e.target.value) }))}
+                    onChange={(e) => handleInputChange('currentSplit', parseInt(e.target.value))}
                     className="flex-1 accent-cyan-500"
                   />
                   <span className="text-lg font-semibold text-gray-900 min-w-[60px]">
@@ -158,7 +200,7 @@ const InteractiveDemoSection = () => {
                   <input
                     type="number"
                     value={demoInputs.currentMonthlyFees}
-                    onChange={(e) => setDemoInputs(prev => ({ ...prev, currentMonthlyFees: parseInt(e.target.value) || 0 }))}
+                    onChange={(e) => handleInputChange('currentMonthlyFees', parseInt(e.target.value) || 0)}
                     className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-lg"
                   />
                 </div>
@@ -168,7 +210,7 @@ const InteractiveDemoSection = () => {
                   max="3000"
                   step="100"
                   value={demoInputs.currentMonthlyFees}
-                  onChange={(e) => setDemoInputs(prev => ({ ...prev, currentMonthlyFees: parseInt(e.target.value) }))}
+                  onChange={(e) => handleInputChange('currentMonthlyFees', parseInt(e.target.value))}
                   className="w-full mt-2 accent-cyan-500"
                 />
               </div>
@@ -217,12 +259,13 @@ const InteractiveDemoSection = () => {
 
               {/* CTA */}
               <div className="text-center pt-4">
-                <Link
+                <DemoButton
+                  trackingName="get_complete_analysis"
+                  onClick={handleGetCompleteAnalysis}
                   href="/calculator"
-                  className="block w-full bg-cyan-500 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
                 >
                   Get Complete Analysis
-                </Link>
+                </DemoButton>
                 <p className="text-sm text-gray-500 mt-2">
                   See detailed breakdown with all brokerages
                 </p>
@@ -250,6 +293,15 @@ const InteractiveDemoSection = () => {
 };
 
 export default function Home() {
+  // Track page view
+  useEffect(() => {
+    trackPageView('landing', {
+      user_agent: navigator.userAgent,
+      timestamp: new Date().toISOString()
+    });
+    trackConversionEvent('landing_viewed');
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -264,12 +316,12 @@ export default function Home() {
                 </h1>
               </Link>
             </div>
-            <Link
+            <NavigationButton
+              trackingName="get_started_nav"
               href="/calculator"
-              className="bg-cyan-500 text-white px-6 py-2.5 rounded-lg hover:bg-cyan-600 transition-colors font-semibold shadow-sm focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
             >
               Get Started
-            </Link>
+            </NavigationButton>
           </div>
         </div>
       </nav>
@@ -302,15 +354,17 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <AnimatedButton
+              <HeroButton
+                trackingName="compare_brokerages_now"
                 href="/calculator"
-                className="px-8 py-4 bg-cyan-500 text-white text-lg font-semibold rounded-lg hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
               >
                 Compare Brokerages Now
-              </AnimatedButton>
-              <AnimatedButton className="px-8 py-4 border-2 border-slate-600 text-slate-600 text-lg font-semibold rounded-lg hover:bg-slate-50 transition-colors focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
+              </HeroButton>
+              <SecondaryButton
+                trackingName="watch_demo"
+              >
                 Watch 2-Min Demo
-              </AnimatedButton>
+              </SecondaryButton>
             </motion.div>
             <motion.p
               initial={{ opacity: 0 }}
@@ -517,12 +571,12 @@ export default function Home() {
             </p>
           </FadeInUp>
           <FadeInUp delay={0.2}>
-            <AnimatedButton
+            <HeroButton
+              trackingName="start_your_comparison"
               href="/calculator"
-              className="inline-block px-8 py-4 bg-cyan-500 text-white text-lg font-semibold rounded-lg hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
             >
               Start Your Comparison
-            </AnimatedButton>
+            </HeroButton>
           </FadeInUp>
           <p className="text-sm text-cyan-200 mt-4">
             Questions? Email nick@brokeragecompass.com or call (555) 123-4567
