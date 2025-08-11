@@ -100,7 +100,7 @@ a[href^="#"] {
 
 /* Button animations */
 .btn-primary {
-  @apply bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none;
+  @apply bg-slate-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:bg-slate-700 hover:shadow-lg hover:-translate-y-0.5 focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:outline-none;
 }
 
 .btn-secondary {
@@ -109,13 +109,13 @@ a[href^="#"] {
 
 /* Input improvements - prevent layout shifts and unwanted scrolling */
 .input-enhanced {
-  @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200;
+  @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200;
   min-height: 3rem;
   box-sizing: border-box;
 }
 
 .input-enhanced:focus {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.1);
   /* Prevent automatic scrolling on focus */
   scroll-margin: 0;
 }
@@ -180,7 +180,7 @@ a[href^="#"] {
 }
 
 .progress-fill {
-  @apply h-full bg-blue-600 transition-all duration-500 ease-out;
+  @apply h-full bg-cyan-500 transition-all duration-500 ease-out;
 }
 
 /* Tooltip styles */
@@ -334,4 +334,100 @@ select {
   .mobile-modal-content {
     @apply bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto;
   }
+}
+
+/* Interactive Demo Animations */
+.demo-result {
+  transition: all 0.3s ease-in-out;
+}
+
+.savings-highlight {
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
+  }
+}
+
+/* Emerald-themed animations */
+.emerald-pulse {
+  animation: emerald-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes emerald-pulse {
+  0%, 100% {
+    background-color: rgb(16, 185, 129);
+    opacity: 1;
+  }
+  50% {
+    background-color: rgb(5, 150, 105);
+    opacity: 0.8;
+  }
+}
+
+/* Smooth number transitions for demo */
+.number-transition {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Enhanced slider styling for emerald theme */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-track {
+  background: #e5e7eb;
+  height: 6px;
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #06b6d4;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #0891b2;
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+input[type="range"]::-moz-range-track {
+  background: #e5e7eb;
+  height: 6px;
+  border-radius: 3px;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #06b6d4;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  background: #0891b2;
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }

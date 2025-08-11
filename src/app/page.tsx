@@ -1,27 +1,272 @@
+'use client';
+
 import Link from "next/link";
+import { useState, useEffect } from 'react';
+import { BrokerageCompassIcon, BrokerageCompassLogoWithText } from '../components/Logo';
+import { motion } from 'framer-motion';
+import { 
+  FadeInUp, 
+  FadeInLeft, 
+  FadeInRight, 
+  ScaleIn, 
+  StaggerContainer, 
+  StaggerItem, 
+  AnimatedCounter, 
+  AnimatedButton,
+  AnimatedCard
+} from '../components/Animations';
+
+// Interactive Demo Component
+const InteractiveDemoSection = () => {
+  const [demoInputs, setDemoInputs] = useState({
+    gci: 80000,
+    transactions: 20,
+    currentSplit: 70,
+    currentMonthlyFees: 1000
+  });
+
+  const [demoResults, setDemoResults] = useState({
+    currentIncome: 0,
+    realIncome: 0,
+    savings: 0,
+    savingsPercentage: '0'
+  });
+
+  // Calculate results in real-time
+  useEffect(() => {
+    const calculateDemoResults = () => {
+      const { gci, transactions, currentSplit, currentMonthlyFees } = demoInputs;
+      
+      // Current brokerage calculation
+      const currentBrokeragePayment = gci * (1 - currentSplit / 100);
+      const currentFees = currentMonthlyFees * 12;
+      const currentIncome = gci - currentBrokeragePayment - currentFees;
+      
+      // Real Brokerage calculation (85/15 split, $12K cap)
+      const realBrokeragePayment = Math.min(gci * 0.15, 12000);
+      const realFees = 750 + (transactions * 30); // Annual fee + transaction fees
+      const realIncome = gci - realBrokeragePayment - realFees;
+      
+      // Calculate savings
+      const savings = realIncome - currentIncome;
+      
+      setDemoResults({
+        currentIncome: Math.max(0, currentIncome),
+        realIncome: Math.max(0, realIncome),
+        savings: savings,
+        savingsPercentage: currentIncome > 0 ? ((savings / currentIncome) * 100).toFixed(1) : '0'
+      });
+    };
+
+    calculateDemoResults();
+  }, [demoInputs]);
+
+  return (
+    <section className="py-16 bg-gradient-to-br from-slate-50 via-white to-cyan-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <FadeInUp className="text-center mb-12">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            See Your Potential Savings
+            <span className="text-cyan-500"> Instantly</span>
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Adjust the numbers below to see how much you could save by switching brokerages. 
+            This is a live calculation using real commission structures.
+          </p>
+        </FadeInUp>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Input Section */}
+          <FadeInLeft>
+            <AnimatedCard className="bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+            <h3 className="text-xl font-semibold mb-6 text-gray-900">
+              Your Numbers
+            </h3>
+            
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Annual Gross Commission Income (GCI)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    value={demoInputs.gci}
+                    onChange={(e) => setDemoInputs(prev => ({ ...prev, gci: parseInt(e.target.value) || 0 }))}
+                    className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-lg"
+                  />
+                </div>
+                <input
+                  type="range"
+                  min="30000"
+                  max="300000"
+                  step="5000"
+                  value={demoInputs.gci}
+                  onChange={(e) => setDemoInputs(prev => ({ ...prev, gci: parseInt(e.target.value) }))}
+                  className="w-full mt-2 accent-cyan-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Number of Transactions
+                </label>
+                <input
+                  type="number"
+                  value={demoInputs.transactions}
+                  onChange={(e) => setDemoInputs(prev => ({ ...prev, transactions: parseInt(e.target.value) || 0 }))}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-lg"
+                />
+                <input
+                  type="range"
+                  min="5"
+                  max="100"
+                  step="1"
+                  value={demoInputs.transactions}
+                  onChange={(e) => setDemoInputs(prev => ({ ...prev, transactions: parseInt(e.target.value) }))}
+                  className="w-full mt-2 accent-cyan-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Current Commission Split (You Keep %)
+                </label>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="range"
+                    min="50"
+                    max="95"
+                    step="5"
+                    value={demoInputs.currentSplit}
+                    onChange={(e) => setDemoInputs(prev => ({ ...prev, currentSplit: parseInt(e.target.value) }))}
+                    className="flex-1 accent-cyan-500"
+                  />
+                  <span className="text-lg font-semibold text-gray-900 min-w-[60px]">
+                    {demoInputs.currentSplit}%
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Current Monthly Fees
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    value={demoInputs.currentMonthlyFees}
+                    onChange={(e) => setDemoInputs(prev => ({ ...prev, currentMonthlyFees: parseInt(e.target.value) || 0 }))}
+                    className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-lg"
+                  />
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="3000"
+                  step="100"
+                  value={demoInputs.currentMonthlyFees}
+                  onChange={(e) => setDemoInputs(prev => ({ ...prev, currentMonthlyFees: parseInt(e.target.value) }))}
+                  className="w-full mt-2 accent-cyan-500"
+                />
+              </div>
+            </div>
+            </AnimatedCard>
+          </FadeInLeft>
+
+          {/* Results Section */}
+          <FadeInRight>
+            <AnimatedCard className="bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+            <h3 className="text-xl font-semibold mb-6 text-gray-900">
+              Your Potential Savings
+            </h3>
+            
+            <div className="space-y-6">
+              {/* Current vs Real Comparison */}
+              <div className="bg-gray-50 p-6 rounded-lg demo-result">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-gray-600">Current Brokerage:</span>
+                  <span className="text-xl font-semibold text-gray-900 number-transition">
+                    ${demoResults.currentIncome.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Real Brokerage:</span>
+                  <span className="text-xl font-semibold text-cyan-600 number-transition">
+                    ${demoResults.realIncome.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Savings Highlight */}
+              <div className={`bg-cyan-50 p-6 rounded-lg border border-cyan-200 demo-result ${demoResults.savings > 5000 ? 'savings-highlight' : ''}`}>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-cyan-600 mb-2 number-transition">
+                    {demoResults.savings >= 0 ? '+' : ''}${demoResults.savings.toLocaleString()}
+                  </div>
+                  <div className="text-cyan-700 font-medium">
+                    Annual Savings ({demoResults.savingsPercentage}% {demoResults.savings >= 0 ? 'increase' : 'decrease'})
+                  </div>
+                  <div className="text-sm text-cyan-600 mt-2">
+                    That&apos;s ${Math.abs(Math.round(demoResults.savings / 12)).toLocaleString()} {demoResults.savings >= 0 ? 'more' : 'less'} per month!
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="text-center pt-4">
+                <Link
+                  href="/calculator"
+                  className="block w-full bg-cyan-500 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
+                >
+                  Get Complete Analysis
+                </Link>
+                <p className="text-sm text-gray-500 mt-2">
+                  See detailed breakdown with all brokerages
+                </p>
+              </div>
+            </div>
+            </AnimatedCard>
+          </FadeInRight>
+        </div>
+
+        {/* Trust Indicators */}
+        <FadeInUp delay={0.3} className="mt-12 text-center">
+          <p className="text-sm text-gray-600 mb-4">
+            Calculations based on official brokerage commission structures
+          </p>
+          <StaggerContainer className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+            <StaggerItem><span className="text-sm font-medium">Real Brokerage</span></StaggerItem>
+            <StaggerItem><span className="text-sm font-medium">eXp Realty</span></StaggerItem>
+            <StaggerItem><span className="text-sm font-medium">Epique Realty</span></StaggerItem>
+            <StaggerItem><span className="text-sm font-medium">LPT Realty</span></StaggerItem>
+          </StaggerContainer>
+        </FadeInUp>
+      </div>
+    </section>
+  );
+};
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h1 className="text-xl font-bold text-gray-900">
+              <Link href="/" className="flex items-center space-x-3">
+                <BrokerageCompassIcon size={32} />
+                <h1 className="text-xl font-bold text-slate-700">
                   BrokerageCompass
                 </h1>
-              </div>
+              </Link>
             </div>
             <Link
               href="/calculator"
-              className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-sm"
+              className="bg-cyan-500 text-white px-6 py-2.5 rounded-lg hover:bg-cyan-600 transition-colors font-semibold shadow-sm focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
             >
               Get Started
             </Link>
@@ -29,346 +274,273 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563eb' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Trust Indicator */}
-            <div className="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-8">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Trusted by 1,000+ Real Estate Agents
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-              Navigate Your Real Estate Career.
-              <span className="text-blue-600 block">Make Informed Decisions.</span>
-            </h1>
-
-            {/* Subheadline */}
-            <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Professional brokerage comparison tool. Compare commission splits, fees, revenue share, and stock awards to find the perfect fit for your career.
-            </p>
-
-            {/* CTA Section */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-              <Link
+            {/* Hero Section */}
+      <section className="bg-gradient-to-br from-slate-50 via-white to-cyan-50 py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6"
+            >
+              Stop Guessing. Start
+              <span className="text-slate-600"> Calculating.</span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              className="text-xl lg:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto"
+            >
+              See exactly how much you could earn at different brokerages. 
+              Built by a Real agent, for agents who want the truth about their options.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <AnimatedButton
                 href="/calculator"
-                className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 w-full sm:w-auto"
+                className="px-8 py-4 bg-cyan-500 text-white text-lg font-semibold rounded-lg hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
               >
-                Start Comparison
-                <svg className="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-              <button className="text-gray-700 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors border border-gray-300 w-full sm:w-auto">
-                View Demo
-                <svg className="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M13 16h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Key Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">4</div>
-                <div className="text-gray-600">Top Brokerages</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">10+</div>
-                <div className="text-gray-600">Calculation Factors</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">$100K+</div>
-                <div className="text-gray-600">Average Savings Found</div>
-              </div>
-            </div>
+                Compare Brokerages Now
+              </AnimatedButton>
+              <AnimatedButton className="px-8 py-4 border-2 border-slate-600 text-slate-600 text-lg font-semibold rounded-lg hover:bg-slate-50 transition-colors focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
+                Watch 2-Min Demo
+              </AnimatedButton>
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+              className="text-sm text-gray-500 mt-4"
+            >
+              Free tool • No signup required • Used by <AnimatedCounter end={500} suffix="+" /> agents
+            </motion.p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Features Section */}
-      <div className="bg-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Everything You Need to Make the Right Choice
+      {/* Interactive Demo Section */}
+      <InteractiveDemoSection />
+
+      {/* Problem Statement Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <FadeInUp>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              Tired of Complex Commission Structures?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our comprehensive calculator analyzes every aspect of your potential earnings 
-              to help you choose the brokerage that maximizes your income.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Commission Calculator */}
-            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                </svg>
+          </FadeInUp>
+          
+          <StaggerContainer className="grid md:grid-cols-3 gap-8">
+            <StaggerItem>
+              <div className="text-center">
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <svg className="w-8 h-8 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </motion.div>
+                <h3 className="font-semibold text-lg mb-2">Confusing Fee Structures</h3>
+                <p className="text-gray-600">Hidden fees, complex caps, and unclear revenue share models</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Commission Calculator
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                See your exact take-home pay after splits, caps, and fees across all major cloud brokerages.
-              </p>
-            </div>
+            </StaggerItem>
 
-            {/* Revenue Share Analysis */}
-            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
+            <StaggerItem>
+              <div className="text-center">
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                  className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <svg className="w-8 h-8 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                  </svg>
+                </motion.div>
+                <h3 className="font-semibold text-lg mb-2">Impossible to Compare</h3>
+                <p className="text-gray-600">Every brokerage structures things differently - apples to oranges</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Revenue Share Analysis
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Understand your recruiting potential with multi-tier revenue share calculations and projections.
-              </p>
-            </div>
+            </StaggerItem>
 
-            {/* Stock Awards */}
-            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
+            <StaggerItem>
+              <div className="text-center">
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <svg className="w-8 h-8 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </motion.div>
+                <h3 className="font-semibold text-lg mb-2">Costly Mistakes</h3>
+                <p className="text-gray-600">Choose wrong and lose thousands per year in unnecessary fees</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Stock Awards
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Calculate bonus opportunities and stock award potential based on your production level.
-              </p>
-            </div>
-
-            {/* Timeline Projections */}
-            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <div className="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Timeline Projections
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Know exactly when you'll hit your cap and start earning 100% commission retention.
-              </p>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerContainer>
         </div>
-      </div>
+      </section>
 
-      {/* Brokerages Section */}
-      <div className="bg-gray-50 py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Compare Top Cloud Brokerages
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Get detailed analysis of leading cloud brokerages with competitive splits and innovative models.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg mb-6"></div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Real Brokerage</h3>
-              <div className="space-y-2 text-gray-600">
-                <p className="flex justify-between">
-                  <span>Split:</span>
-                  <span className="font-semibold">85/15</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Cap:</span>
-                  <span className="font-semibold">$12K</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Stock Awards:</span>
-                  <span className="font-semibold">Up to $24K</span>
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200">
-              <div className="w-12 h-12 bg-green-600 rounded-lg mb-6"></div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">eXp Realty</h3>
-              <div className="space-y-2 text-gray-600">
-                <p className="flex justify-between">
-                  <span>Split:</span>
-                  <span className="font-semibold">80/20</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Cap:</span>
-                  <span className="font-semibold">$16K</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Stock Awards:</span>
-                  <span className="font-semibold">Up to $16K</span>
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200">
-              <div className="w-12 h-12 bg-purple-600 rounded-lg mb-6"></div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Epique Realty</h3>
-              <div className="space-y-2 text-gray-600">
-                <p className="flex justify-between">
-                  <span>Split:</span>
-                  <span className="font-semibold">85/15</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Cap:</span>
-                  <span className="font-semibold">$15K</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Stock Awards:</span>
-                  <span className="font-semibold">Up to $15K</span>
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200">
-              <div className="w-12 h-12 bg-orange-600 rounded-lg mb-6"></div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">LPT Realty</h3>
-              <div className="space-y-2 text-gray-600">
-                <p className="flex justify-between">
-                  <span>Split:</span>
-                  <span className="font-semibold">80/20</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Cap:</span>
-                  <span className="font-semibold">$15K</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Stock Awards:</span>
-                  <span className="font-semibold">Up to $5K</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Social Proof Section */}
-      <div className="bg-white py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Join Thousands of Agents Making Smarter Decisions
+      {/* Solution/Features Section */}
+      <section className="py-16 bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FadeInUp className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Finally, Clear Answers
             </h2>
             <p className="text-xl text-gray-600">
-              Real estate professionals trust our calculator to make informed brokerage choices
+              Compare real numbers across cloud and traditional brokerages
             </p>
-          </div>
-
-          {/* Testimonials */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-gray-50 p-8 rounded-2xl">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                  SM
+          </FadeInUp>
+          
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <FadeInLeft>
+              <StaggerContainer className="space-y-8">
+                <StaggerItem>
+                  <div className="flex items-start">
+                    <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                      <svg className="w-5 h-5 text-cyan-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Complete Financial Picture</h3>
+                      <p className="text-gray-600">Commission splits, caps, fees, revenue share, and stock awards - all calculated automatically</p>
+                    </div>
+                  </div>
+                </StaggerItem>
+                
+                <StaggerItem>
+                  <div className="flex items-start">
+                    <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                      <svg className="w-5 h-5 text-cyan-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Your Current vs. New</h3>
+                      <p className="text-gray-600">See exactly how much you would save (or lose) by switching brokerages</p>
+                    </div>
+                  </div>
+                </StaggerItem>
+                
+                <div className="flex items-start">
+                  <div className="w-8 h-8 bg-cyan-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                    <svg className="w-5 h-5 text-cyan-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">Professional Reports</h3>
+                    <p className="text-gray-600">Share calculations via link or export professional PDF reports</p>
+                  </div>
                 </div>
-                <div className="ml-4">
-                  <h4 className="font-semibold text-gray-900">Sarah Mitchell</h4>
-                  <p className="text-gray-600">Top Producer, Austin TX</p>
+              </StaggerContainer>
+            </FadeInLeft>
+            
+            <FadeInRight>
+              <AnimatedCard className="bg-white p-8 rounded-xl shadow-lg">
+              <div className="text-center mb-6">
+                <div className="text-3xl font-bold text-cyan-600">$18,500</div>
+                <div className="text-gray-600">Average annual savings</div>
+                <div className="text-sm text-gray-500">when switching from traditional to cloud brokerage</div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex justify-between border-b pb-2">
+                  <span className="text-gray-600">Commission Savings:</span>
+                  <span className="font-semibold">$12,000</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="text-gray-600">Reduced Fees:</span>
+                  <span className="font-semibold">$4,200</span>
+                </div>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="text-gray-600">Revenue Share:</span>
+                  <span className="font-semibold">$2,300</span>
                 </div>
               </div>
-              <p className="text-gray-700 italic">
-                "This calculator saved me $15K annually. I had no idea about the revenue share differences until I used this tool."
-              </p>
-            </div>
-
-            <div className="bg-gray-50 p-8 rounded-2xl">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold">
-                  RJ
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-semibold text-gray-900">Robert Johnson</h4>
-                  <p className="text-gray-600">Team Leader, Miami FL</p>
-                </div>
-              </div>
-              <p className="text-gray-700 italic">
-                "Finally, a tool that shows the complete picture. The stock award calculations were eye-opening."
-              </p>
-            </div>
-
-            <div className="bg-gray-50 p-8 rounded-2xl">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                  LC
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-semibold text-gray-900">Lisa Chen</h4>
-                  <p className="text-gray-600">New Agent, San Diego CA</p>
-                </div>
-              </div>
-              <p className="text-gray-700 italic">
-                "As a new agent, this helped me understand which brokerage would support my growth best. Invaluable resource!"
-              </p>
-            </div>
+              </AnimatedCard>
+            </FadeInRight>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Final CTA Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to Compare Your Options?
-          </h2>
-          <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-            Get your personalized comparison in minutes. See exactly how much you could earn with each brokerage.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
+      {/* About/Credibility Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FadeInUp className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Built by an Agent, for Agents
+            </h2>
+          </FadeInUp>
+          
+          <FadeInUp delay={0.2}>
+            <AnimatedCard className="bg-cyan-50 p-8 rounded-xl">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="w-24 h-24 bg-slate-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                NB
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-3">Why I Built This Tool</h3>
+                <p className="text-gray-700 mb-4">
+                  As a Real Brokerage agent, I was constantly asked by other agents about our commission structure 
+                  and how it compared to their current brokerage. The calculations were complex, and I wanted to 
+                  give them accurate, transparent information to make informed decisions.
+                </p>
+                <p className="text-gray-700">
+                  This tool uses real data from official brokerage documents and fee schedules. 
+                  No marketing fluff - just honest numbers to help you navigate your career.
+                </p>
+                <div className="mt-4 text-sm text-gray-600">
+                  Licensed Real Estate Agent | Real Brokerage Team Member | CA License #02150284
+                </div>
+              </div>
+            </div>
+            </AnimatedCard>
+          </FadeInUp>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-r from-slate-600 to-slate-700">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <FadeInUp>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Ready to See Your Real Numbers?
+            </h2>
+            <p className="text-xl text-cyan-200 mb-8">
+              Takes 2 minutes. No signup required. Get your personalized comparison instantly.
+            </p>
+          </FadeInUp>
+          <FadeInUp delay={0.2}>
+            <AnimatedButton
               href="/calculator"
-              className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 w-full sm:w-auto"
+              className="inline-block px-8 py-4 bg-cyan-500 text-white text-lg font-semibold rounded-lg hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
             >
-              Start Calculator
-              <svg className="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
-            <button className="text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors border border-blue-400 w-full sm:w-auto">
-              Learn More
-            </button>
-          </div>
+              Start Your Comparison
+            </AnimatedButton>
+          </FadeInUp>
+          <p className="text-sm text-cyan-200 mt-4">
+            Questions? Email nick@brokeragecompass.com or call (555) 123-4567
+          </p>
         </div>
-      </div>
+      </section>
 
       {/* Footer */}
       <footer className="bg-gray-900 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                </div>
+              <div className="flex items-center space-x-3 mb-4">
+                <BrokerageCompassIcon size={32} variant="white" />
                 <h3 className="text-xl font-bold text-white">BrokerageCompass</h3>
               </div>
               <p className="text-gray-400 mb-4">
-                Navigate your real estate career with confidence. Professional brokerage comparison tool to help agents make data-driven decisions about their future.
+                Navigate your real estate career with confidence. Professional brokerage comparison tool built by an agent, for agents.
               </p>
               <p className="text-gray-500 text-sm">
                 © 2024 BrokerageCompass. All rights reserved.

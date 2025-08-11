@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { BrokerageCompassIcon } from '../../components/Logo';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -148,7 +149,7 @@ const cloudBrokerages: BrokerageData[] = [
       description: 'Elite Agent Award up to $24K annually',
       tradeable: true
     },
-    color: 'bg-blue-600'
+    color: 'bg-slate-600'
   },
   {
     name: 'eXp Realty',
@@ -246,7 +247,7 @@ const traditionalBrokerages: BrokerageData[] = [
       description: 'No stock awards',
       tradeable: false
     },
-    color: 'bg-red-600'
+    color: 'bg-cyan-500'
   },
   {
     name: 'Keller Williams',
@@ -369,7 +370,7 @@ export default function Calculator() {
     phone: '',
     email: '',
     website: '',
-    primaryColor: '#2563eb',
+    primaryColor: '#475569',
     tagline: 'Navigate Your Real Estate Career'
   });
   const [showBrandingModal, setShowBrandingModal] = useState<boolean>(false);
@@ -517,7 +518,7 @@ export default function Calculator() {
             phone: decodedData.branding.phone || '',
             email: decodedData.branding.email || '',
             website: decodedData.branding.website || '',
-            primaryColor: decodedData.branding.primaryColor || '#2563eb',
+            primaryColor: decodedData.branding.primaryColor || '#475569',
             tagline: decodedData.branding.tagline || ''
           });
         }
@@ -559,7 +560,15 @@ export default function Calculator() {
       ">
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 32px; border-bottom: 2px solid ${brandingConfig.primaryColor}; padding-bottom: 24px;">
-          ${brandingConfig.logo ? `<img src="${brandingConfig.logo}" alt="Logo" style="height: 64px; margin: 0 auto 16px auto; display: block;" />` : ''}
+          ${brandingConfig.logo ? `<img src="${brandingConfig.logo}" alt="Logo" style="height: 64px; margin: 0 auto 16px auto; display: block;" />` : `
+            <svg width="64" height="64" viewBox="0 0 100 100" style="margin: 0 auto 16px auto; display: block;" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="${brandingConfig.primaryColor}" stroke-width="6"/>
+              <circle cx="50" cy="50" r="30" fill="#f8fafc" stroke="#06b6d4" stroke-width="3"/>
+              <path d="M50 20 L45 35 L50 30 L55 35 Z" fill="#06b6d4"/>
+              <path d="M50 80 L45 65 L50 70 L55 65 Z" fill="${brandingConfig.primaryColor}"/>
+              <circle cx="50" cy="50" r="5" fill="${brandingConfig.primaryColor}"/>
+            </svg>
+          `}
           <h1 style="font-size: 28px; font-weight: bold; color: ${brandingConfig.primaryColor}; margin-bottom: 8px; margin-top: 0;">
             BrokerageCompass Analysis Report
           </h1>
@@ -1393,7 +1402,7 @@ export default function Calculator() {
               />
               <button
                 onClick={() => copyToClipboard(shareUrl)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors min-h-[44px] flex items-center justify-center"
+                className="px-4 py-2 bg-slate-600 text-white rounded-md hover:bg-slate-700 transition-colors min-h-[44px] flex items-center justify-center"
               >
                 Copy
               </button>
@@ -1554,7 +1563,7 @@ export default function Calculator() {
                 value={tempConfig.agentName || ''}
                 onChange={(e) => setTempConfig(prev => ({ ...prev, agentName: e.target.value }))}
                 placeholder="John Smith / Smith Real Estate Team"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
               />
             </div>
             
@@ -1567,7 +1576,7 @@ export default function Calculator() {
                 value={tempConfig.phone || ''}
                 onChange={(e) => setTempConfig(prev => ({ ...prev, phone: e.target.value }))}
                 placeholder="(555) 123-4567"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
               />
             </div>
             
@@ -1580,7 +1589,7 @@ export default function Calculator() {
                 value={tempConfig.email || ''}
                 onChange={(e) => setTempConfig(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="john@realestategroup.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
               />
             </div>
             
@@ -1593,7 +1602,7 @@ export default function Calculator() {
                 value={tempConfig.website || ''}
                 onChange={(e) => setTempConfig(prev => ({ ...prev, website: e.target.value }))}
                 placeholder="www.yoursite.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
               />
             </div>
           </div>
@@ -1606,7 +1615,7 @@ export default function Calculator() {
             <div className="flex gap-4 items-center">
               <input
                 type="color"
-                value={tempConfig.primaryColor || '#2563eb'}
+                value={tempConfig.primaryColor || '#475569'}
                 onChange={(e) => setTempConfig(prev => ({ ...prev, primaryColor: e.target.value }))}
                 className="w-12 h-8 border border-gray-300 rounded cursor-pointer"
               />
@@ -1626,7 +1635,7 @@ export default function Calculator() {
               value={tempConfig.tagline || ''}
               onChange={(e) => setTempConfig(prev => ({ ...prev, tagline: e.target.value }))}
               placeholder="Helping agents maximize their potential"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
           </div>
           
@@ -1694,14 +1703,7 @@ export default function Calculator() {
                 {brandingConfig.logo ? (
                   <img src={brandingConfig.logo} alt="Logo" className="h-8 w-auto" />
                 ) : (
-                  <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: brandingConfig.primaryColor }}
-                  >
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                  </div>
+                  <BrokerageCompassIcon size={32} />
                 )}
                 <div>
                   <h1 
@@ -1781,7 +1783,7 @@ export default function Calculator() {
               {/* Scenario Presets */}
               <div className="mb-8">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                   Quick Scenarios
@@ -1791,10 +1793,10 @@ export default function Calculator() {
                     <button
                       key={index}
                       onClick={() => loadScenario(scenario)}
-                      className="p-4 text-sm border border-gray-300 rounded-xl hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 text-left group min-h-[44px] flex flex-col justify-center"
+                      className="p-4 text-sm border border-gray-300 rounded-xl hover:bg-cyan-50 hover:border-cyan-300 transition-all duration-200 text-left group min-h-[44px] flex flex-col justify-center focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
                       style={{ minHeight: '44px' }}
                     >
-                      <div className="font-semibold text-gray-900 group-hover:text-blue-600">
+                      <div className="font-semibold text-gray-900 group-hover:text-cyan-600">
                         {scenario.name}
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
@@ -1806,7 +1808,7 @@ export default function Calculator() {
               </div>
 
               <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
                 Your Production Data
@@ -1829,7 +1831,7 @@ export default function Calculator() {
                           id="gci"
                           value={gci}
                           onChange={(e) => setGci(e.target.value)}
-                          className="w-full border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base sm:text-lg transition-all"
+                          className="w-full border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-base sm:text-lg transition-all"
                           style={{ paddingLeft: '40px', paddingRight: '16px', paddingTop: '12px', paddingBottom: '12px', minHeight: '44px', fontSize: '16px' }}
                           placeholder="80,000"
                           inputMode="numeric"
@@ -1846,7 +1848,7 @@ export default function Calculator() {
                         id="transactions"
                         value={transactions}
                         onChange={(e) => setTransactions(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base sm:text-lg transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-base sm:text-lg transition-all"
                         style={{ minHeight: '44px', fontSize: '16px' }}
                         placeholder="20"
                         inputMode="numeric"
@@ -1870,7 +1872,7 @@ export default function Calculator() {
                           type="checkbox"
                           checked={isHighProducer}
                           onChange={(e) => setIsHighProducer(e.target.checked)}
-                          className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="w-5 h-5 rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
                         />
                         <div>
                           <span className="text-sm font-medium text-gray-700">
@@ -2145,7 +2147,7 @@ export default function Calculator() {
                 </div>
 
                 {/* Recruiting Section */}
-                <div className="bg-blue-50 rounded-xl p-6">
+                <div className="bg-cyan-50 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -2162,7 +2164,7 @@ export default function Calculator() {
                         id="recruitingGoal"
                         value={recruitingGoal}
                         onChange={(e) => setRecruitingGoal(e.target.value)}
-                        className="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg bg-white input-enhanced"
+                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg bg-white input-enhanced"
                       >
                         <option value="1-2 agents">1-2 agents</option>
                         <option value="3-5 agents">3-5 agents</option>
@@ -2179,7 +2181,7 @@ export default function Calculator() {
                         id="recruits"
                         value={recruits}
                         onChange={(e) => setRecruits(e.target.value)}
-                        className="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg bg-white input-enhanced"
+                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg bg-white input-enhanced"
                         placeholder="0"
                         min="0"
                       />
@@ -2196,7 +2198,7 @@ export default function Calculator() {
                           id="recruitGci"
                           value={recruitGci}
                           onChange={(e) => setRecruitGci(e.target.value)}
-                          className="w-full border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg bg-white"
+                          className="w-full border border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg bg-white"
                             style={{ paddingLeft: '40px', paddingRight: '16px', paddingTop: '12px', paddingBottom: '12px', minHeight: '3rem' }}
                           placeholder="60,000"
                         />
@@ -2286,7 +2288,7 @@ export default function Calculator() {
                 {/* Loading State */}
                 {isCalculating && (
                   <div className="bg-white rounded-2xl shadow-xl p-12 text-center border border-gray-200">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">Calculating your personalized results...</p>
                   </div>
                 )}
@@ -2294,18 +2296,18 @@ export default function Calculator() {
                 {/* Toggle Switch for Cloud vs Traditional */}
                 {!isCalculating && (
                   <div className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0">
-                    <span className={`text-sm font-medium ${!showTraditional ? 'text-blue-600' : 'text-gray-500'} sm:mr-3`}>
+                    <span className={`text-sm font-medium ${!showTraditional ? 'text-cyan-600' : 'text-gray-500'} sm:mr-3`}>
                       Cloud Brokerages
                     </span>
                     <button
                       onClick={() => setShowTraditional(!showTraditional)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center ${
-                        showTraditional ? 'bg-blue-600' : 'bg-gray-200'
+                        showTraditional ? 'bg-slate-600' : 'bg-gray-200'
                       }`}
                       style={{ minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
                       <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        showTraditional ? 'bg-blue-600' : 'bg-gray-200'
+                        showTraditional ? 'bg-slate-600' : 'bg-gray-200'
                       }`}>
                         <span
                           className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -2314,7 +2316,7 @@ export default function Calculator() {
                         />
                       </div>
                     </button>
-                    <span className={`text-sm font-medium ${showTraditional ? 'text-blue-600' : 'text-gray-500'} sm:ml-3`}>
+                    <span className={`text-sm font-medium ${showTraditional ? 'text-cyan-600' : 'text-gray-500'} sm:ml-3`}>
                       Traditional Brokerages
                     </span>
                   </div>
@@ -2342,7 +2344,7 @@ export default function Calculator() {
                         </h3>
                         
                         {/* Comparison Callout for Traditional View */}
-                        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="mb-4 p-4 bg-cyan-50 border border-slate-200 rounded-lg">
                           <p className="text-sm text-blue-800">
                             💡 <strong>Tip:</strong> Toggle to "Cloud Brokerages" to see how much you could save 
                             by switching from traditional to cloud-based models. Typical savings: $15K-$25K+ annually!
@@ -2355,7 +2357,7 @@ export default function Calculator() {
 
                 {/* Summary Section when current brokerage comparison is enabled */}
                 {!isCalculating && showCurrentBrokerage && results.length > 1 && (
-                  <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 text-white shadow-xl border border-blue-200">
+                  <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 text-white shadow-xl border border-slate-200">
                     <div className="flex items-center mb-4">
                       <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -2420,7 +2422,7 @@ export default function Calculator() {
                         
                         <button
                           onClick={handleShareCalculation}
-                          className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-semibold min-h-[44px]"
+                          className="w-full sm:w-auto px-6 py-3 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2 font-semibold min-h-[44px] focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
@@ -2431,7 +2433,7 @@ export default function Calculator() {
                         <button
                           onClick={handleExportPDF}
                           disabled={isGeneratingPDF}
-                          className="w-full sm:w-auto px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                          className="w-full sm:w-auto px-6 py-3 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors flex items-center justify-center gap-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                         >
                           {isGeneratingPDF ? (
                             <>
@@ -2566,7 +2568,7 @@ export default function Calculator() {
                             
                             <div className="flex justify-between items-center">
                               <span className="text-sm font-medium text-gray-600">Revenue Share:</span>
-                              <span className="font-bold text-blue-600 text-lg">
+                              <span className="font-bold text-cyan-600 text-lg">
                                 {formatCurrency(result.revenueShareIncome)}
                               </span>
                             </div>
@@ -2591,8 +2593,8 @@ export default function Calculator() {
                             </div>
                             
                             {result.capReached && (
-                              <div className="bg-green-50 border border-green-200 rounded-xl p-4 mt-4">
-                                <p className="text-sm text-green-800 font-semibold flex items-center">
+                              <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-4 mt-4">
+                                <p className="text-sm text-cyan-800 font-semibold flex items-center">
                                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
@@ -2615,7 +2617,7 @@ export default function Calculator() {
                   <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
                     <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
                       <h3 className="text-lg font-bold text-gray-900 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                         Complete Income Analysis
@@ -2709,7 +2711,7 @@ export default function Calculator() {
                                     )}
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm font-bold text-blue-600">
+                                    <div className="text-sm font-bold text-cyan-600">
                                       {formatCurrency(result.revenueShareIncome)}
                                     </div>
                                     {parseFloat(recruits) > 0 && (
@@ -2865,14 +2867,14 @@ export default function Calculator() {
                   <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-lg font-bold text-gray-900 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 mr-2 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Cap Timeline Analysis
                       </h3>
                       <button
                         onClick={() => setShowCapTimeline(!showCapTimeline)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                        className="bg-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors font-semibold"
                       >
                         {showCapTimeline ? 'Hide' : 'Show'} Timeline
                       </button>
@@ -2945,7 +2947,7 @@ export default function Calculator() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <button
                         onClick={() => setShowTraditional(false)}
-                        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                        className="bg-slate-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors"
                       >
                         View Cloud Brokerages
                       </button>
@@ -2962,13 +2964,13 @@ export default function Calculator() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <button
                         onClick={() => loadScenario(scenarios[1])}
-                        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                        className="bg-cyan-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
                       >
                         Try Example: Experienced Agent
                       </button>
                       <button
                         onClick={() => loadScenario(scenarios[2])}
-                        className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
+                        className="bg-cyan-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-cyan-600 transition-colors focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
                       >
                         Try Example: Team Leader
                       </button>
@@ -2993,7 +2995,7 @@ export default function Calculator() {
 
       {/* Success Notifications */}
       {showSaveSuccess && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
+        <div className="fixed top-4 right-4 bg-cyan-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -3002,7 +3004,7 @@ export default function Calculator() {
       )}
 
       {showCopySuccess && (
-        <div className="fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
+        <div className="fixed top-4 right-4 bg-cyan-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -3011,7 +3013,7 @@ export default function Calculator() {
       )}
 
       {showPDFSuccess && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
+        <div className="fixed top-4 right-4 bg-cyan-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -3029,7 +3031,7 @@ export default function Calculator() {
       )}
 
       {showBrandingSaveSuccess && (
-        <div className="fixed top-4 right-4 bg-purple-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
+        <div className="fixed top-4 right-4 bg-cyan-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
