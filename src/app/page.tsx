@@ -578,9 +578,7 @@ export default function Home() {
               Start Your Comparison
             </HeroButton>
           </FadeInUp>
-          <p className="text-sm text-cyan-200 mt-4">
-            Questions? Email nick@brokeragecompass.com or call (555) 123-4567
-          </p>
+
         </div>
       </section>
 
