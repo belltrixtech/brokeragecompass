@@ -1442,7 +1442,7 @@ export default function Calculator() {
     // Debounce calculations to prevent excessive re-renders and layout shifts
     const timer = setTimeout(() => {
       calculateResults();
-    }, 50);
+    }, 300); // Increased from 50ms to 300ms to reduce jumping
     
     return () => clearTimeout(timer);
   }, [gci, transactions, recruits, recruitGci, recruitTransactions, recruitingGoal, isHighProducer, customTransactionFees, customPerTransactionFee, avgSalePrice, showCurrentBrokerage, currentCommissionSplit, currentAnnualCap, currentMonthlyFees, currentTransactionFees, currentAnnualFees, currentRoyaltyFees, currentOtherMonthlyCosts, showTraditional]);
@@ -2081,8 +2081,21 @@ export default function Calculator() {
                             id="currentMonthlyFees"
                             value={currentMonthlyFees}
                             onChange={(e) => setCurrentMonthlyFees(e.target.value)}
+                            onFocus={(e) => {
+                              // Prevent auto-scroll on focus
+                              e.target.scrollIntoView = () => {};
+                            }}
                             className="w-full border border-yellow-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-lg bg-white"
-                            style={{ paddingLeft: '40px', paddingRight: '16px', paddingTop: '12px', paddingBottom: '12px', minHeight: '3rem' }}
+                            style={{ 
+                              paddingLeft: '40px', 
+                              paddingRight: '16px', 
+                              paddingTop: '12px', 
+                              paddingBottom: '12px', 
+                              minHeight: '3rem',
+                              scrollMarginTop: '0px',
+                              scrollBehavior: 'auto',
+                              overflowAnchor: 'none'
+                            }}
                             placeholder="500 (desk fees, franchise fees, etc.)"
                           />
                         </div>
@@ -2099,8 +2112,21 @@ export default function Calculator() {
                             id="currentTransactionFees"
                             value={currentTransactionFees}
                             onChange={(e) => setCurrentTransactionFees(e.target.value)}
+                            onFocus={(e) => {
+                              // Prevent auto-scroll on focus
+                              e.target.scrollIntoView = () => {};
+                            }}
                             className="w-full border border-yellow-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-lg bg-white"
-                            style={{ paddingLeft: '40px', paddingRight: '16px', paddingTop: '12px', paddingBottom: '12px', minHeight: '3rem' }}
+                            style={{ 
+                              paddingLeft: '40px', 
+                              paddingRight: '16px', 
+                              paddingTop: '12px', 
+                              paddingBottom: '12px', 
+                              minHeight: '3rem',
+                              scrollMarginTop: '0px',
+                              scrollBehavior: 'auto',
+                              overflowAnchor: 'none'
+                            }}
                             placeholder="300 (per transaction)"
                           />
                         </div>
