@@ -878,8 +878,6 @@ export default function Calculator() {
   };
 
   const loadScenario = (scenario: Scenario) => {
-    console.log('Loading scenario:', scenario.name, scenario);
-    
     // Track scenario selection
     trackConversionEvent('scenario_selected', {
       scenario_name: scenario.name,
@@ -894,12 +892,6 @@ export default function Calculator() {
     setRecruitGci(scenario.recruitGci);
     setRecruitingGoal(scenario.recruitingGoal);
     setIsHighProducer(parseFloat(scenario.gci) >= 500000 || parseFloat(scenario.transactions) >= 20);
-    
-    console.log('Scenario loaded, new values:', {
-      gci: scenario.gci,
-      transactions: scenario.transactions,
-      recruits: scenario.recruits
-    });
   };
 
   const calculateEnhancedRevenueShare = (brokerage: BrokerageData, numRecruits: number, recruitAvgGci: number, goal: string) => {
@@ -1172,13 +1164,9 @@ export default function Calculator() {
   };
 
   const calculateResults = () => {
-    console.log('calculateResults called with:', { gci, transactions, recruits });
-    
     const grossCommission = parseFloat(gci) || 0;
     const numTransactions = parseFloat(transactions) || 0;
     const numRecruits = parseFloat(recruits) || 0;
-    
-    console.log('Parsed values:', { grossCommission, numTransactions, numRecruits });
     const recruitAvgGci = parseFloat(recruitGci) || 0;
     const calculatedAvgSalePrice = grossCommission && numTransactions ? grossCommission / numTransactions * 20 : 0;
     const userAvgSalePrice = parseFloat(avgSalePrice) || calculatedAvgSalePrice;
@@ -1217,22 +1205,11 @@ export default function Calculator() {
     }
       
       const calculations = displayedBrokerages.map(brokerage => {
-        console.log(`\n=== ${brokerage.name.toUpperCase()} CALCULATION DEBUG ===`);
-        console.log("Input GCI:", grossCommission);
-        console.log("Number of Transactions:", numTransactions);
-        console.log("Brokerage Split:", brokerage.brokerageSplit, "%");
-        console.log("Agent Split:", brokerage.agentSplit, "%");
-        console.log("Cap:", brokerage.cap);
-        
         const brokerageCommission = (grossCommission * brokerage.brokerageSplit) / 100;
         const agentCommission = (grossCommission * brokerage.agentSplit) / 100;
         
-        console.log("Brokerage commission calculation:", grossCommission, "*", brokerage.brokerageSplit / 100, "=", brokerageCommission);
-        
         const capReached = brokerageCommission >= brokerage.cap;
         const timeline = calculateCapTimeline(grossCommission, brokerage.brokerageSplit, brokerage.cap);
-        
-        console.log("Cap reached?", capReached, "(", brokerageCommission, ">=", brokerage.cap, ")");
         
         let annualFees = 0;
         let transactionFees = 0;
@@ -1418,25 +1395,26 @@ export default function Calculator() {
         finalResults = [currentResult, ...calculations];
       }
 
-    console.log('Setting results:', finalResults.length, 'results calculated');
     setResults(finalResults);
     
     // Track brokerage comparison
     const comparedBrokerages = finalResults.map(result => result.brokerage.name);
     trackBrokerageComparison(comparedBrokerages);
     
-    // Track with Google Analytics as well
-    if (topResult) {
-      trackGABrokerageComparison(comparedBrokerages, {
-        gci: grossCommission,
-        topSavingsBrokerage: topResult.brokerage.name,
-        maxSavings: topResult.differenceFromCurrent
-      });
-    }
-    
     // Track calculator scenario with results
     if (finalResults.length > 0) {
       const topResult = finalResults.find(r => !r.isCurrentBrokerage) || finalResults[0];
+      
+      // Track with Google Analytics as well
+      try {
+        trackGABrokerageComparison(comparedBrokerages, {
+          gci: grossCommission,
+          topSavingsBrokerage: topResult.brokerage.name,
+          maxSavings: topResult.differenceFromCurrent
+        });
+      } catch (error) {
+        console.log('GA tracking error in results:', error);
+      }
       trackCalculatorScenario({
         gci: grossCommission,
         transactions: numTransactions,
@@ -2471,14 +2449,18 @@ export default function Calculator() {
                         setShowTraditional(newShowTraditional);
                         
                         // Track brokerage type toggle with Google Analytics
-                        trackGACalculatorUse(
-                          newShowTraditional ? 'traditional' : 'cloud',
-                          {
-                            gci: parseFloat(gci) || 0,
-                            transactions: parseFloat(transactions) || 0,
-                            currentBrokerage: showCurrentBrokerage ? 'Custom Current Brokerage' : 'Not Specified'
-                          }
-                        );
+                        try {
+                          trackGACalculatorUse(
+                            newShowTraditional ? 'traditional' : 'cloud',
+                            {
+                              gci: parseFloat(gci) || 0,
+                              transactions: parseFloat(transactions) || 0,
+                              currentBrokerage: showCurrentBrokerage ? 'Custom Current Brokerage' : 'Not Specified'
+                            }
+                          );
+                        } catch (error) {
+                          console.log('GA tracking error:', error);
+                        }
                       }}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center ${
                         showTraditional ? 'bg-slate-600' : 'bg-gray-200'
