@@ -22,6 +22,7 @@ A web application that helps real estate agents compare earnings between differe
 - **Styling**: Tailwind CSS
 - **Language**: TypeScript
 - **State Management**: React hooks
+- **Analytics**: Google Analytics 4 + Vercel Analytics
 
 ## Getting Started
 
@@ -66,6 +67,26 @@ The calculator uses the following logic for each brokerage:
 - Transaction fee calculations
 - Annual projection tools
 - Export/save functionality
+
+## Analytics Implementation
+
+This application includes dual analytics tracking:
+
+### Google Analytics 4
+- **Measurement ID**: G-77PNPC0WQW
+- **Events tracked**: Calculator usage, brokerage comparisons, PDF downloads, demo interactions
+- **Implementation**: Uses Next.js Script component with afterInteractive strategy
+
+### Vercel Analytics
+- **Purpose**: Performance and usage analytics
+- **Implementation**: Vercel's built-in analytics package
+
+### Key Events Tracked
+- Calculator form submissions
+- Brokerage type toggles (cloud vs traditional)
+- PDF export conversions
+- Button clicks and user interactions
+- Page views and session data
 
 ## Contributing
 

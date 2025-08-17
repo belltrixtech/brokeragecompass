@@ -14,7 +14,9 @@ import {
   trackPageView, 
   trackConversionEvent,
   trackCalculatorScenario,
-  trackFormInteraction
+  trackFormInteraction,
+  trackGACalculatorUse,
+  trackGABrokerageComparison
 } from '../../utils/analytics';
 import { 
   CalculatorButton, 
@@ -1410,6 +1412,15 @@ export default function Calculator() {
     const comparedBrokerages = finalResults.map(result => result.brokerage.name);
     trackBrokerageComparison(comparedBrokerages);
     
+    // Track with Google Analytics as well
+    if (topResult) {
+      trackGABrokerageComparison(comparedBrokerages, {
+        gci: grossCommission,
+        topSavingsBrokerage: topResult.brokerage.name,
+        maxSavings: topResult.differenceFromCurrent
+      });
+    }
+    
     // Track calculator scenario with results
     if (finalResults.length > 0) {
       const topResult = finalResults.find(r => !r.isCurrentBrokerage) || finalResults[0];
@@ -2442,7 +2453,20 @@ export default function Calculator() {
                       Cloud Brokerages
                     </span>
                     <button
-                      onClick={() => setShowTraditional(!showTraditional)}
+                      onClick={() => {
+                        const newShowTraditional = !showTraditional;
+                        setShowTraditional(newShowTraditional);
+                        
+                        // Track brokerage type toggle with Google Analytics
+                        trackGACalculatorUse(
+                          newShowTraditional ? 'traditional' : 'cloud',
+                          {
+                            gci: parseFloat(gci) || 0,
+                            transactions: parseFloat(transactions) || 0,
+                            currentBrokerage: showCurrentBrokerage ? 'Custom Current Brokerage' : 'Not Specified'
+                          }
+                        );
+                      }}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center ${
                         showTraditional ? 'bg-slate-600' : 'bg-gray-200'
                       }`}
