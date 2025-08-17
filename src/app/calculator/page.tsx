@@ -878,6 +878,8 @@ export default function Calculator() {
   };
 
   const loadScenario = (scenario: Scenario) => {
+    console.log('Loading scenario:', scenario.name, scenario);
+    
     // Track scenario selection
     trackConversionEvent('scenario_selected', {
       scenario_name: scenario.name,
@@ -892,6 +894,12 @@ export default function Calculator() {
     setRecruitGci(scenario.recruitGci);
     setRecruitingGoal(scenario.recruitingGoal);
     setIsHighProducer(parseFloat(scenario.gci) >= 500000 || parseFloat(scenario.transactions) >= 20);
+    
+    console.log('Scenario loaded, new values:', {
+      gci: scenario.gci,
+      transactions: scenario.transactions,
+      recruits: scenario.recruits
+    });
   };
 
   const calculateEnhancedRevenueShare = (brokerage: BrokerageData, numRecruits: number, recruitAvgGci: number, goal: string) => {
@@ -1164,9 +1172,13 @@ export default function Calculator() {
   };
 
   const calculateResults = () => {
+    console.log('calculateResults called with:', { gci, transactions, recruits });
+    
     const grossCommission = parseFloat(gci) || 0;
     const numTransactions = parseFloat(transactions) || 0;
     const numRecruits = parseFloat(recruits) || 0;
+    
+    console.log('Parsed values:', { grossCommission, numTransactions, numRecruits });
     const recruitAvgGci = parseFloat(recruitGci) || 0;
     const calculatedAvgSalePrice = grossCommission && numTransactions ? grossCommission / numTransactions * 20 : 0;
     const userAvgSalePrice = parseFloat(avgSalePrice) || calculatedAvgSalePrice;
@@ -1406,6 +1418,7 @@ export default function Calculator() {
         finalResults = [currentResult, ...calculations];
       }
 
+    console.log('Setting results:', finalResults.length, 'results calculated');
     setResults(finalResults);
     
     // Track brokerage comparison
