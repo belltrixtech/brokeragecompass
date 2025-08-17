@@ -316,12 +316,23 @@ export default function Home() {
                 </h1>
               </Link>
             </div>
-            <NavigationButton
-              trackingName="get_started_nav"
-              href="/calculator"
-            >
-              Get Started
-            </NavigationButton>
+            <div className="flex items-center space-x-8">
+              <Link href="/" className="text-gray-700 hover:text-slate-600 transition-colors">
+                Home
+              </Link>
+              <Link href="/calculator" className="text-gray-700 hover:text-slate-600 transition-colors">
+                Calculator
+              </Link>
+              <Link href="/resources" className="text-gray-700 hover:text-slate-600 transition-colors">
+                Resources
+              </Link>
+              <NavigationButton
+                trackingName="get_started_nav"
+                href="/calculator"
+              >
+                Get Started
+              </NavigationButton>
+            </div>
           </div>
         </div>
       </nav>
