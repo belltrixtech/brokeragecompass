@@ -3089,6 +3089,59 @@ export default function Calculator() {
                     )}
                   </div>
                 )}
+
+                {/* Educational Links Section */}
+                {results.length > 0 && !isCalculating && (
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mt-8">
+                    <h3 className="font-semibold text-slate-800 mb-4 text-lg">📚 Learn More About Your Options</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <Link 
+                        href="/resources/understanding-revenue-share-programs"
+                        className="block p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md hover:border-cyan-200 transition-all duration-200"
+                      >
+                        <h4 className="font-medium text-slate-800 mb-2 hover:text-cyan-600 transition-colors">
+                          → Understanding Revenue Share Programs
+                        </h4>
+                        <p className="text-sm text-slate-600">
+                          Learn how revenue share works and maximize your earning potential
+                        </p>
+                      </Link>
+                      <Link 
+                        href="/resources/commission-splits-explained"
+                        className="block p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md hover:border-cyan-200 transition-all duration-200"
+                      >
+                        <h4 className="font-medium text-slate-800 mb-2 hover:text-cyan-600 transition-colors">
+                          → Commission Splits Explained
+                        </h4>
+                        <p className="text-sm text-slate-600">
+                          Break down different commission structures and calculate your take-home pay
+                        </p>
+                      </Link>
+                      <Link 
+                        href="/resources/cloud-vs-traditional-brokerages"
+                        className="block p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md hover:border-cyan-200 transition-all duration-200"
+                      >
+                        <h4 className="font-medium text-slate-800 mb-2 hover:text-cyan-600 transition-colors">
+                          → Cloud vs Traditional Brokerages
+                        </h4>
+                        <p className="text-sm text-slate-600">
+                          Compare the pros and cons of modern cloud vs traditional franchise models
+                        </p>
+                      </Link>
+                      <Link 
+                        href="/resources/how-to-compare-real-estate-brokerages"
+                        className="block p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md hover:border-cyan-200 transition-all duration-200"
+                      >
+                        <h4 className="font-medium text-slate-800 mb-2 hover:text-cyan-600 transition-colors">
+                          → How to Compare Brokerages
+                        </h4>
+                        <p className="text-sm text-slate-600">
+                          Complete guide to evaluating brokerages beyond just commission splits
+                        </p>
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="bg-white rounded-2xl shadow-xl p-12 text-center border border-gray-200">

@@ -77,7 +77,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           </div>
         </div>
       `,
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      date: '2025-01-17',
       readTime: '8 min read',
       category: 'Guides',
       keywords: ['real estate brokerage comparison', 'commission splits', 'brokerage evaluation', 'agent career']
@@ -141,7 +141,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           </div>
         </div>
       `,
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      date: '2025-01-17',
       readTime: '6 min read',
       category: 'Education',
       keywords: ['revenue share', 'passive income', 'real estate recruiting', 'agent income']
@@ -221,7 +221,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           </div>
         </div>
       `,
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      date: '2025-01-17',
       readTime: '10 min read',
       category: 'Comparison',
       keywords: ['cloud brokerage', 'traditional brokerage', 'real estate technology', 'brokerage comparison']
@@ -298,7 +298,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           </div>
         </div>
       `,
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      date: '2025-01-17',
       readTime: '7 min read',
       category: 'Education',
       keywords: ['commission splits', 'real estate earnings', 'agent income', 'brokerage fees']
