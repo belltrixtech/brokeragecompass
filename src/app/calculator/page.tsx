@@ -16,7 +16,8 @@ import {
   trackCalculatorScenario,
   trackFormInteraction,
   trackGACalculatorUse,
-  trackGABrokerageComparison
+  trackGABrokerageComparison,
+  trackReferralClick
 } from '../../utils/analytics';
 import { 
   CalculatorButton, 
@@ -3087,6 +3088,96 @@ export default function Calculator() {
                         ))}
                       </div>
                     )}
+                  </div>
+                )}
+
+                {/* Referral Integration Section */}
+                {results.length > 0 && !isCalculating && (() => {
+                  // Find Real Brokerage in results and check if it's a top performer
+                  const realBrokerageResult = results.find(r => r.brokerage.name === 'Real Brokerage');
+                  const sortedResults = results.filter(r => !r.isCurrentBrokerage).sort((a, b) => b.totalAnnualIncome - a.totalAnnualIncome);
+                  const realBrokerageRank = realBrokerageResult ? sortedResults.findIndex(r => r.brokerage.name === 'Real Brokerage') + 1 : 999;
+                  const potentialSavings = realBrokerageResult?.differenceFromCurrent || 0;
+                  const gciValue = parseFloat(gci) || 0;
+                  const isSignificantSavings = potentialSavings >= 5000;
+                  
+                  // Show referral section if Real Brokerage is in top 2 results and has significant savings
+                  const showReferral = realBrokerageRank <= 2 && isSignificantSavings && gciValue > 0;
+                  
+                  // Debug logging to help troubleshoot
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log('Referral Debug:', {
+                      realBrokerageResult: !!realBrokerageResult,
+                      realBrokerageRank,
+                      potentialSavings,
+                      isSignificantSavings,
+                      gciValue,
+                      showReferral
+                    });
+                  }
+                  
+                  const handleReferralClick = (brokerage: string) => {
+                    trackReferralClick(brokerage, gciValue, potentialSavings);
+                  };
+                  
+                  return showReferral ? (
+                    <div className="mt-8 p-6 bg-gradient-to-r from-slate-50 to-cyan-50 rounded-lg border border-slate-200">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                          <svg className="w-6 h-6 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                            Ready to Get Started with Real Brokerage?
+                          </h3>
+                          <p className="text-slate-600 mb-4">
+                            Based on your numbers, Real Brokerage could save you {formatCurrency(potentialSavings)} annually. 
+                            Ready to make the switch and start saving?
+                          </p>
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <a
+                              href="https://bolt.therealbrokerage.com/register?sponsorCode=4oryuip&sponsorName=Nick%20Bellante"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => handleReferralClick('Real Brokerage')}
+                              className="inline-flex items-center px-6 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
+                            >
+                              Join Real Brokerage
+                              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                            <a
+                              href="mailto:brokeragecompass@gmail.com?subject=Real Brokerage Questions&body=Hi, I used the BrokerageCompass calculator and I'm interested in learning more about Real Brokerage. My GCI is $${gciValue.toLocaleString()} and the potential savings shown were ${formatCurrency(potentialSavings)}."
+                              className="inline-flex items-center px-6 py-3 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors"
+                            >
+                              Questions? Email Us
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
+
+                {/* Transparency Disclosure */}
+                {results.length > 0 && !isCalculating && (
+                  <div className="mt-6 p-4 bg-slate-100 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <svg className="w-5 h-5 text-slate-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <h4 className="text-sm font-medium text-slate-800 mb-1">Transparency Disclosure</h4>
+                        <p className="text-xs text-slate-600">
+                          BrokerageCompass may earn a commission if you join certain brokerages through our referral links. 
+                          This doesn't affect our calculations, which are based on publicly available information. 
+                          All commission structures are independently verified.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
 

@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "BrokerageCompass - Navigate Your Real Estate Career",
-  description: "Professional brokerage comparison tool built by an agent, for agents. Compare commission splits, fees, revenue share, and stock awards across cloud and traditional brokerages.",
-  keywords: "real estate brokerage comparison, commission calculator, agent tools, real estate career, Real Brokerage, eXp Realty, Epique Realty, LPT Realty",
-  authors: [{ name: "Nick Bellante", url: "https://brokeragecompass.com" }],
-  creator: "Nick Bellante",
+  description: "Professional brokerage comparison tool built by licensed real estate professionals. Compare commission splits, fees, revenue share, and stock awards across cloud and traditional brokerages.",
+  keywords: "real estate brokerage comparison, commission calculator, agent tools, real estate career, brokerage comparison, eXp Realty, Epique Realty, LPT Realty, cloud brokerages",
+  authors: [{ name: "BrokerageCompass Team", url: "https://brokeragecompass.com" }],
+  creator: "BrokerageCompass Team",
   publisher: "BrokerageCompass",
   applicationName: "BrokerageCompass",
   
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   // Open Graph
   openGraph: {
     title: "BrokerageCompass - Navigate Your Real Estate Career",
-    description: "Professional brokerage comparison tool built by an agent, for agents. See exactly how much you could earn at different brokerages.",
+    description: "Professional brokerage comparison tool built by licensed real estate professionals. See exactly how much you could earn at different brokerages.",
     url: "https://brokeragecompass.com",
     type: "website",
     siteName: "BrokerageCompass",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     title: "BrokerageCompass - Navigate Your Real Estate Career",
     description: "Professional tool to compare commission splits and earnings across real estate brokerages.",
     site: "@BrokerageCompass",
-    creator: "@NickBellante",
+    creator: "@BrokerageCompass",
     images: ["/og-image.png"]
   },
   

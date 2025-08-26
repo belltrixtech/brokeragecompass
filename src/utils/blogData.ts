@@ -107,7 +107,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           <h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">Typical Percentages</h3>
           <p class="text-gray-700 mb-4">Revenue share percentages vary by brokerage:</p>
           <ul class="list-disc list-inside text-gray-700 mb-6 space-y-2">
-            <li><strong>Real Brokerage:</strong> 5% on Level 1, decreasing by 1% per level</li>
+            <li><strong>Cloud Brokerage A:</strong> 5% on Level 1, decreasing by 1% per level</li>
             <li><strong>eXp Realty:</strong> 3.5% on sponsored agents until they cap</li>
             <li><strong>Other brokerages:</strong> Vary widely in structure and percentages</li>
           </ul>
@@ -136,7 +136,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           
           <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-6 my-8">
             <h3 class="text-lg font-semibold text-emerald-900 mb-2">Example Scenario</h3>
-            <p class="text-emerald-800 mb-2">If you recruit 6 agents who each do $75,000 in GCI annually at Real Brokerage:</p>
+            <p class="text-emerald-800 mb-2">If you recruit 6 agents who each do $75,000 in GCI annually at a cloud brokerage:</p>
             <p class="text-emerald-800 mb-0"><strong>Potential annual revenue share: $22,500</strong> (5% of their $450,000 combined splits to the brokerage)</p>
           </div>
         </div>
@@ -156,7 +156,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           <p class="text-xl text-gray-600 mb-8">The real estate industry has been transformed by cloud-based brokerages. Here's how they compare to traditional models and which might be right for your career.</p>
           
           <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">What Are Cloud Brokerages?</h2>
-          <p class="text-gray-700 mb-6">Cloud brokerages operate primarily online with minimal physical presence. Examples include Real Brokerage, eXp Realty, and Compass. They leverage technology to reduce overhead and pass savings to agents through better commission splits.</p>
+          <p class="text-gray-700 mb-6">Cloud brokerages operate primarily online with minimal physical presence. Examples include various technology-focused companies like eXp Realty and Compass. They leverage technology to reduce overhead and pass savings to agents through better commission splits.</p>
           
           <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Traditional Brokerages</h2>
           <p class="text-gray-700 mb-6">Traditional brokerages like Keller Williams, Coldwell Banker, and RE/MAX operate with physical offices and established franchise systems. They emphasize local presence and in-person support.</p>

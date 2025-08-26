@@ -121,14 +121,14 @@ export const trackBrokerageComparison = (brokerages: string[]) => {
   // Vercel Analytics
   track('brokerages_compared', {
     brokerages: brokerages.join(','),
-    comparison_type: brokerages.includes('Real Brokerage') ? 'includes_real' : 'no_real',
+    comparison_type: brokerages.length > 2 ? 'multi_brokerage' : 'basic_comparison',
     count: brokerages.length
   });
   
   // Google Analytics
   trackGAEvent('brokerages_compared', {
     brokerages_compared: brokerages.join(','),
-    comparison_type: brokerages.includes('Real Brokerage') ? 'includes_real' : 'no_real',
+    comparison_type: brokerages.length > 2 ? 'multi_brokerage' : 'basic_comparison',
     comparison_count: brokerages.length,
     event_category: 'Calculator',
     event_label: `${brokerages.length}_brokerages`
@@ -273,5 +273,42 @@ export const trackFormInteraction = (formName: string, action: string, data: Rec
     action: action, // 'started', 'field_changed', 'submitted', 'abandoned'
     ...data,
     timestamp: new Date().toISOString()
+  });
+};
+
+// Track referral clicks for monetization
+export const trackReferralClick = (brokerage: string, userGCI: number, savingsAmount: number) => {
+  track('referral_click', {
+    brokerage: brokerage,
+    user_gci: userGCI,
+    savings_amount: savingsAmount,
+    page_location: typeof window !== 'undefined' ? window.location.pathname : '',
+    timestamp: new Date().toISOString()
+  });
+  
+  trackGAEvent('referral_click', {
+    brokerage_name: brokerage,
+    gci_amount: userGCI,
+    potential_savings: savingsAmount,
+    event_category: 'Referral',
+    event_label: `${brokerage}_referral`,
+    value: Math.round(savingsAmount / 100) // Value in hundreds for GA
+  });
+};
+
+// Track when users convert through referral links
+export const trackReferralConversion = (brokerage: string, userGCI: number) => {
+  track('referral_conversion', {
+    brokerage: brokerage,
+    user_gci: userGCI,
+    conversion_source: 'brokeragecompass_calculator'
+  });
+  
+  trackGAEvent('referral_conversion', {
+    brokerage_name: brokerage,
+    gci_amount: userGCI,
+    event_category: 'Conversion',
+    event_label: `${brokerage}_signup`,
+    value: Math.round(userGCI / 1000) // Value in thousands for GA
   });
 };

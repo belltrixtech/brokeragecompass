@@ -11,7 +11,7 @@ A web application that helps real estate agents compare earnings between differe
 
 ## Supported Brokerages
 
-- **Real Brokerage**: 85/15 split, $12K cap
+- **Cloud Brokerages**: Competitive splits and caps
 - **eXp Realty**: 80/20 split, $16K cap  
 - **Epique Realty**: 85/15 split, $15K cap
 - **LPT Realty**: 80/20 split, $15K cap

@@ -61,17 +61,17 @@ const InteractiveDemoSection = () => {
       const currentFees = currentMonthlyFees * 12;
       const currentIncome = gci - currentBrokeragePayment - currentFees;
       
-      // Real Brokerage calculation (85/15 split, $12K cap)
-      const realBrokeragePayment = Math.min(gci * 0.15, 12000);
-      const realFees = 750 + (transactions * 30); // Annual fee + transaction fees
-      const realIncome = gci - realBrokeragePayment - realFees;
+      // Example cloud brokerage calculation (85/15 split, $12K cap)
+      const cloudBrokeragePayment = Math.min(gci * 0.15, 12000);
+      const cloudFees = 750 + (transactions * 30); // Annual fee + transaction fees
+      const cloudIncome = gci - cloudBrokeragePayment - cloudFees;
       
       // Calculate savings
-      const savings = realIncome - currentIncome;
+      const savings = cloudIncome - currentIncome;
       
       setDemoResults({
         currentIncome: Math.max(0, currentIncome),
-        realIncome: Math.max(0, realIncome),
+        realIncome: Math.max(0, cloudIncome),
         savings: savings,
         savingsPercentage: currentIncome > 0 ? ((savings / currentIncome) * 100).toFixed(1) : '0'
       });
@@ -235,7 +235,7 @@ const InteractiveDemoSection = () => {
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Real Brokerage:</span>
+                  <span className="text-gray-600">Cloud Brokerage:</span>
                   <span className="text-xl font-semibold text-cyan-600 number-transition">
                     ${demoResults.realIncome.toLocaleString()}
                   </span>
@@ -281,7 +281,7 @@ const InteractiveDemoSection = () => {
             Calculations based on official brokerage commission structures
           </p>
           <StaggerContainer className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-            <StaggerItem><span className="text-sm font-medium">Real Brokerage</span></StaggerItem>
+            <StaggerItem><span className="text-sm font-medium">Cloud Brokerages</span></StaggerItem>
             <StaggerItem><span className="text-sm font-medium">eXp Realty</span></StaggerItem>
             <StaggerItem><span className="text-sm font-medium">Epique Realty</span></StaggerItem>
             <StaggerItem><span className="text-sm font-medium">LPT Realty</span></StaggerItem>
@@ -326,6 +326,12 @@ export default function Home() {
               <Link href="/resources" className="text-gray-700 hover:text-slate-600 transition-colors">
                 Resources
               </Link>
+              <a 
+                href="mailto:brokeragecompass@gmail.com"
+                className="text-gray-700 hover:text-slate-600 transition-colors"
+              >
+                Contact
+              </a>
               <NavigationButton
                 trackingName="get_started_nav"
                 href="/calculator"
@@ -357,7 +363,7 @@ export default function Home() {
               className="text-xl lg:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto"
             >
               See exactly how much you could earn at different brokerages. 
-              Built by a Real agent, for agents who want the truth about their options.
+              Built by licensed real estate professionals, for agents who want the truth about their options.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -539,7 +545,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Built by an Agent, for Agents
+              Built by Professionals, for Professionals
             </h2>
           </FadeInUp>
           
@@ -547,21 +553,38 @@ export default function Home() {
             <AnimatedCard className="bg-cyan-50 p-8 rounded-xl">
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="w-24 h-24 bg-slate-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                NB
+                BC
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">Why I Built This Tool</h3>
+                <h3 className="text-xl font-semibold mb-3">Why We Built This Tool</h3>
                 <p className="text-gray-700 mb-4">
-                  As a Real Brokerage agent, I was constantly asked by other agents about our commission structure 
-                  and how it compared to their current brokerage. The calculations were complex, and I wanted to 
-                  give them accurate, transparent information to make informed decisions.
+                  As licensed real estate professionals, we understood the challenge agents face when comparing 
+                  complex commission structures across different brokerages. The calculations were complex, and 
+                  agents needed accurate, transparent information to make informed career decisions.
                 </p>
                 <p className="text-gray-700">
                   This tool uses real data from official brokerage documents and fee schedules. 
                   No marketing fluff - just honest numbers to help you navigate your career.
                 </p>
-                <div className="mt-4 text-sm text-gray-600">
-                  Licensed Real Estate Agent | Real Brokerage Team Member | CA License #02150284
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Built by licensed real estate professionals</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Based on official brokerage documentation</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Updated regularly with current rates</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -593,6 +616,26 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Disclaimer Section */}
+      <section className="bg-slate-100 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="text-xs text-slate-600 space-y-2">
+              <p>
+                <strong>Disclaimer:</strong> BrokerageCompass is an independent comparison tool. Calculations are based on publicly available 
+                information and should be verified with brokerages directly. We may earn a commission from some 
+                brokerage referrals.
+              </p>
+              <p>
+                Commission structures, fees, and terms may change without notice. This tool is for informational purposes 
+                only and does not constitute financial advice. Always consult with licensed professionals before making 
+                career decisions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-gray-900 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -603,7 +646,7 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-white">BrokerageCompass</h3>
               </div>
               <p className="text-gray-400 mb-4">
-                Navigate your real estate career with confidence. Professional brokerage comparison tool built by an agent, for agents.
+                Navigate your real estate career with confidence. Professional brokerage comparison tool built by licensed professionals, for agents.
               </p>
               <p className="text-gray-500 text-sm">
                 © 2024 BrokerageCompass. All rights reserved.
@@ -621,13 +664,21 @@ export default function Home() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-white mb-4">Brokerages</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Real Brokerage</li>
-                <li>eXp Realty</li>
-                <li>Epique Realty</li>
-                <li>LPT Realty</li>
-              </ul>
+              <h4 className="font-semibold text-white mb-4">Contact</h4>
+              <div className="space-y-3">
+                <a 
+                  href="mailto:brokeragecompass@gmail.com"
+                  className="flex items-center space-x-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span>brokeragecompass@gmail.com</span>
+                </a>
+                <p className="text-gray-400 text-sm">
+                  Questions? Feedback? We'd love to hear from you.
+                </p>
+              </div>
             </div>
           </div>
         </div>
