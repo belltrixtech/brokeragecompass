@@ -2,42 +2,13 @@
 
 import Link from 'next/link';
 import { FadeInUp, StaggerContainer, StaggerItem } from '../../components/Animations';
+import { getAllBlogPosts } from '../../utils/blogData';
 
 export default function ResourcesPage() {
-  const blogPosts = [
-    {
-      slug: 'how-to-compare-real-estate-brokerages',
-      title: 'How to Compare Real Estate Brokerages: Complete 2025 Guide',
-      excerpt: 'Learn the key factors to evaluate when choosing a brokerage, from commission splits to support systems.',
-      category: 'Guides',
-      readTime: '8 min read',
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    },
-    {
-      slug: 'understanding-revenue-share-programs',
-      title: 'Understanding Revenue Share Programs: Build Passive Income',
-      excerpt: 'Discover how revenue share works and why it could be a game-changer for your real estate career.',
-      category: 'Education',
-      readTime: '6 min read', 
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    },
-    {
-      slug: 'cloud-vs-traditional-brokerages',
-      title: 'Cloud vs Traditional Brokerages: Which is Right for You?',
-      excerpt: 'Compare the pros and cons of modern cloud brokerages versus traditional franchise models.',
-      category: 'Comparison',
-      readTime: '10 min read',
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    },
-    {
-      slug: 'commission-splits-explained',
-      title: 'Real Estate Commission Splits Explained: Maximize Your Earnings',
-      excerpt: 'Break down different commission structures and learn how to calculate your actual take-home pay.',
-      category: 'Education', 
-      readTime: '7 min read',
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    }
-  ];
+  const blogPosts = getAllBlogPosts().map(post => ({
+    ...post,
+    date: new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  }));
 
   return (
     <>
@@ -58,7 +29,7 @@ export default function ResourcesPage() {
       {/* Blog Posts Grid */}
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+          <StaggerContainer className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
             {blogPosts.map((post) => (
               <StaggerItem key={post.slug}>
                 <Link href={`/resources/${post.slug}`}>

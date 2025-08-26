@@ -28,6 +28,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/calculators`,
+      lastModified: new Date('2025-08-26'),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/calculators/real-brokerage`,
+      lastModified: new Date('2025-08-26'),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
   ];
   
   // Blog post pages

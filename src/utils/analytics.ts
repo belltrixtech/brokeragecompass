@@ -312,3 +312,16 @@ export const trackReferralConversion = (brokerage: string, userGCI: number) => {
     value: Math.round(userGCI / 1000) // Value in thousands for GA
   });
 };
+
+// Track Real Brokerage specific calculator usage
+export const trackEvent = (eventName: string, data: Record<string, any>) => {
+  // Vercel Analytics
+  track(eventName, data);
+  
+  // Google Analytics
+  trackGAEvent(eventName, {
+    ...data,
+    event_category: 'Calculator',
+    event_label: `real_brokerage_${eventName}`
+  });
+};

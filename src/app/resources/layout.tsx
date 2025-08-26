@@ -58,7 +58,7 @@ export default function ResourcesLayout({
                 Navigate your real estate career with confidence. Professional brokerage comparison tool built by an agent, for agents.
               </p>
               <p className="text-gray-500 text-sm">
-                © 2024 BrokerageCompass. All rights reserved.
+                © 2025 BrokerageCompass. All rights reserved.
               </p>
             </div>
 

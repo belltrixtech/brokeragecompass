@@ -3288,6 +3288,39 @@ export default function Calculator() {
         </div>
       </div>
 
+      {/* Cross-linking Section */}
+      <div className="max-w-7xl mx-auto px-4 pb-16">
+        <div className="bg-slate-50 rounded-lg p-8">
+          <h3 className="text-2xl font-bold text-slate-800 mb-4 text-center">
+            Looking for More Specific Analysis?
+          </h3>
+          <p className="text-slate-600 mb-6 text-center max-w-2xl mx-auto">
+            Get detailed calculations for individual brokerages with our specialized tools. 
+            Perfect for when you've narrowed down your options.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link 
+              href="/calculators/real-brokerage"
+              className="inline-flex items-center px-6 py-3 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 hover:shadow-md transition-all"
+            >
+              <svg className="w-5 h-5 mr-2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              Real Brokerage Calculator
+            </Link>
+            <Link 
+              href="/calculators"
+              className="inline-flex items-center px-6 py-3 text-cyan-600 hover:text-cyan-700 font-medium"
+            >
+              View All Specialized Calculators
+              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* Share Modal */}
       <ShareModal 
         isOpen={showShareModal} 

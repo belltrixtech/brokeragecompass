@@ -302,6 +302,17 @@ export const getBlogPost = (slug: string): BlogPost | null => {
       readTime: '7 min read',
       category: 'Education',
       keywords: ['commission splits', 'real estate earnings', 'agent income', 'brokerage fees']
+    },
+
+    'real-brokerage-vs-exp-realty': {
+      slug: 'real-brokerage-vs-exp-realty',
+      title: 'Real Brokerage vs eXp Realty 2025: Complete Comparison',
+      excerpt: 'Compare Real Brokerage vs eXp Realty commission splits, revenue share programs, caps, and total earnings potential. Data-driven analysis for 2025.',
+      content: '', // Content is in the dedicated page component
+      date: '2025-08-26',
+      readTime: '8 min read',
+      category: 'Comparison',
+      keywords: ['Real Brokerage vs eXp Realty', 'Real vs eXp', 'cloud brokerage comparison', 'revenue share comparison', 'Real Brokerage eXp comparison', 'best cloud brokerage 2025']
     }
   };
 
@@ -310,6 +321,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
 
 export const getAllBlogPosts = (): BlogPost[] => {
   const slugs = [
+    'real-brokerage-vs-exp-realty',
     'how-to-compare-real-estate-brokerages',
     'understanding-revenue-share-programs', 
     'cloud-vs-traditional-brokerages',
