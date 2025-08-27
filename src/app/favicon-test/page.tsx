@@ -11,7 +11,7 @@ export default function FaviconTestPage() {
             Favicon Test & Generator
           </h1>
           <p className="text-lg text-gray-600">
-            Test your favicons and generate all required formats for BrokerageCompass
+            Test your favicons and generate all required formats for BrokerageCalc
           </p>
         </div>
 
@@ -25,7 +25,7 @@ export default function FaviconTestPage() {
               <h3 className="font-medium mb-2">Browser Tab</h3>
               <div className="flex items-center gap-2 bg-white p-2 rounded border">
                 <img src="/favicon.svg" alt="Favicon" className="w-4 h-4" />
-                <span className="text-sm text-gray-700">BrokerageCompass</span>
+                <span className="text-sm text-gray-700">BrokerageCalc</span>
               </div>
             </div>
 
@@ -36,7 +36,7 @@ export default function FaviconTestPage() {
                 <img src="/favicon-32x32.png" alt="Favicon 32x32" className="w-6 h-6" onError={(e) => {
                   e.currentTarget.src = '/favicon.svg';
                 }} />
-                <span className="text-sm text-gray-700">BrokerageCompass</span>
+                <span className="text-sm text-gray-700">BrokerageCalc</span>
               </div>
             </div>
 
@@ -47,7 +47,7 @@ export default function FaviconTestPage() {
                 <img src="/apple-touch-icon.png" alt="Apple Touch Icon" className="w-16 h-16 rounded-lg" onError={(e) => {
                   e.currentTarget.src = '/favicon.svg';
                 }} />
-                <span className="text-xs text-gray-700 text-center">BrokerageCompass</span>
+                <span className="text-xs text-gray-700 text-center">BrokerageCalc</span>
               </div>
             </div>
 

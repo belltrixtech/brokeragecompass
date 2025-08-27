@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from 'react';
-import { BrokerageCompassIcon, BrokerageCompassLogoWithText } from '../components/Logo';
+import { BrokerageCalcIcon, BrokerageCalcLogoWithText } from '../components/Logo';
 import { motion } from 'framer-motion';
 import { 
   FadeInUp, 
@@ -310,9 +310,9 @@ export default function Home() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-3">
-                <BrokerageCompassIcon size={32} />
+                <BrokerageCalcIcon size={32} />
                 <h1 className="text-xl font-bold text-slate-700">
-                  BrokerageCompass
+                  BrokerageCalc
                 </h1>
               </Link>
             </div>
@@ -327,7 +327,7 @@ export default function Home() {
                 Resources
               </Link>
               <a 
-                href="mailto:brokeragecompass@gmail.com"
+                href="mailto:brokeragecalc@gmail.com"
                 className="text-gray-700 hover:text-slate-600 transition-colors"
               >
                 Contact
@@ -403,7 +403,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <FadeInUp>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              Tired of Complex Commission Structures?
+              Tired of Complex Commission Calculations?
             </h2>
           </FadeInUp>
           
@@ -433,8 +433,8 @@ export default function Home() {
                     <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
                   </svg>
                 </motion.div>
-                <h3 className="font-semibold text-lg mb-2">Impossible to Compare</h3>
-                <p className="text-gray-600">Every brokerage structures things differently - apples to oranges</p>
+                <h3 className="font-semibold text-lg mb-2">Impossible to Calculate</h3>
+                <p className="text-gray-600">Every brokerage structures things differently - complex math required</p>
               </div>
             </StaggerItem>
 
@@ -461,10 +461,10 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInUp className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Finally, Clear Answers
+              Finally, Clear Calculations
             </h2>
             <p className="text-xl text-gray-600">
-              Compare real numbers across cloud and traditional brokerages
+              Calculate real numbers across cloud and traditional brokerages
             </p>
           </FadeInUp>
           
@@ -622,7 +622,7 @@ export default function Home() {
           <div className="text-center">
             <div className="text-xs text-slate-600 space-y-2">
               <p>
-                <strong>Disclaimer:</strong> BrokerageCompass is an independent comparison tool. Calculations are based on publicly available 
+                <strong>Disclaimer:</strong> BrokerageCalc is an independent calculator tool. Calculations are based on publicly available 
                 information and should be verified with brokerages directly. We may earn a commission from some 
                 brokerage referrals.
               </p>
@@ -642,14 +642,14 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
-                <BrokerageCompassIcon size={32} variant="white" />
-                <h3 className="text-xl font-bold text-white">BrokerageCompass</h3>
+                <BrokerageCalcIcon size={32} variant="white" />
+                <h3 className="text-xl font-bold text-white">BrokerageCalc</h3>
               </div>
               <p className="text-gray-400 mb-4">
-                Navigate your real estate career with confidence. Professional brokerage comparison tool built by licensed professionals, for agents.
+                Calculate your real estate career with confidence. Professional brokerage calculator tool built by licensed professionals, for agents.
               </p>
               <p className="text-gray-500 text-sm">
-                © 2025 BrokerageCompass. All rights reserved.
+                © 2025 BrokerageCalc. All rights reserved.
               </p>
             </div>
 
@@ -667,13 +667,13 @@ export default function Home() {
               <h4 className="font-semibold text-white mb-4">Contact</h4>
               <div className="space-y-3">
                 <a 
-                  href="mailto:brokeragecompass@gmail.com"
+                  href="mailto:brokeragecalc@gmail.com"
                   className="flex items-center space-x-2 text-cyan-400 hover:text-cyan-300 transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  <span>brokeragecompass@gmail.com</span>
+                  <span>brokeragecalc@gmail.com</span>
                 </a>
                 <p className="text-gray-400 text-sm">
                   Questions? Feedback? We'd love to hear from you.

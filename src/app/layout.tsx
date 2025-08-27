@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BrokerageCompass - Navigate Your Real Estate Career",
-  description: "Professional brokerage comparison tool built by licensed real estate professionals. Compare commission splits, fees, revenue share, and stock awards across cloud and traditional brokerages.",
-  keywords: "real estate brokerage comparison, commission calculator, agent tools, real estate career, brokerage comparison, eXp Realty, Epique Realty, LPT Realty, cloud brokerages",
-  authors: [{ name: "BrokerageCompass Team", url: "https://brokeragecompass.com" }],
-  creator: "BrokerageCompass Team",
-  publisher: "BrokerageCompass",
-  applicationName: "BrokerageCompass",
+  title: "BrokerageCalc - Real Estate Brokerage Calculator",
+  description: "Professional brokerage calculator tool built by licensed real estate professionals. Calculate commission splits, fees, revenue share, and stock awards across cloud and traditional brokerages.",
+  keywords: "real estate brokerage calculator, commission calculator, agent tools, real estate career, brokerage calculator, eXp Realty, Epique Realty, LPT Realty, cloud brokerages",
+  authors: [{ name: "BrokerageCalc Team", url: "https://brokeragecalc.com" }],
+  creator: "BrokerageCalc Team",
+  publisher: "BrokerageCalc",
+  applicationName: "BrokerageCalc",
   
   // Comprehensive favicon and icon configuration
   icons: {
@@ -48,18 +48,18 @@ export const metadata: Metadata = {
   
   // Open Graph
   openGraph: {
-    title: "BrokerageCompass - Navigate Your Real Estate Career",
-    description: "Professional brokerage comparison tool built by licensed real estate professionals. See exactly how much you could earn at different brokerages.",
-    url: "https://brokeragecompass.com",
+    title: "BrokerageCalc - Real Estate Brokerage Calculator",
+    description: "Professional brokerage calculator tool built by licensed real estate professionals. Calculate exactly how much you could earn at different brokerages.",
+    url: "https://brokeragecalc.com",
     type: "website",
-    siteName: "BrokerageCompass",
+    siteName: "BrokerageCalc",
     locale: "en_US",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "BrokerageCompass - Professional Real Estate Brokerage Comparison Tool"
+        alt: "BrokerageCalc - Professional Real Estate Brokerage Calculator Tool"
       }
     ]
   },
@@ -67,10 +67,10 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "BrokerageCompass - Navigate Your Real Estate Career",
-    description: "Professional tool to compare commission splits and earnings across real estate brokerages.",
-    site: "@BrokerageCompass",
-    creator: "@BrokerageCompass",
+    title: "BrokerageCalc - Real Estate Brokerage Calculator",
+    description: "Professional tool to calculate commission splits and earnings across real estate brokerages.",
+    site: "@BrokerageCalc",
+    creator: "@BrokerageCalc",
     images: ["/og-image.png"]
   },
   
@@ -111,7 +111,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="BrokerageCompass" />
+        <meta name="apple-mobile-web-app-title" content="BrokerageCalc" />
         
         {/* Additional favicon support for older browsers */}
         <link rel="shortcut icon" href="/favicon.ico" />

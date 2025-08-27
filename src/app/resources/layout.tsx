@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BrokerageCompassIcon } from '../../components/Logo';
+import { BrokerageCalcIcon } from '../../components/Logo';
 
 export default function ResourcesLayout({
   children,
@@ -16,9 +16,9 @@ export default function ResourcesLayout({
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-3">
-                <BrokerageCompassIcon size={32} />
+                <BrokerageCalcIcon size={32} />
                 <h1 className="text-xl font-bold text-slate-700">
-                  BrokerageCompass
+                  BrokerageCalc
                 </h1>
               </Link>
             </div>
@@ -51,14 +51,14 @@ export default function ResourcesLayout({
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
-                <BrokerageCompassIcon size={32} variant="white" />
-                <h3 className="text-xl font-bold text-white">BrokerageCompass</h3>
+                <BrokerageCalcIcon size={32} variant="white" />
+                <h3 className="text-xl font-bold text-white">BrokerageCalc</h3>
               </div>
               <p className="text-gray-400 mb-4">
                 Navigate your real estate career with confidence. Professional brokerage comparison tool built by an agent, for agents.
               </p>
               <p className="text-gray-500 text-sm">
-                © 2025 BrokerageCompass. All rights reserved.
+                © 2025 BrokerageCalc. All rights reserved.
               </p>
             </div>
 

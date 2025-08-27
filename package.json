@@ -1,8 +1,8 @@
 {
-  "name": "brokeragecompass",
+  "name": "brokeragecalc",
   "version": "1.0.0",
-  "description": "Professional real estate brokerage comparison tool",
-  "homepage": "https://brokeragecompass.com",
+  "description": "Professional real estate brokerage calculator tool",
+  "homepage": "https://brokeragecalc.com",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

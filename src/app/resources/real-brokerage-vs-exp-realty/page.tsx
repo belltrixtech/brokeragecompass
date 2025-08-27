@@ -3,7 +3,7 @@ import Link from 'next/link'
 import ArticleSchema from '@/components/ArticleSchema'
 
 export const metadata: Metadata = {
-  title: 'Real Brokerage vs eXp Realty 2025: Complete Comparison | BrokerageCompass',
+  title: 'Real Brokerage vs eXp Realty 2025: Complete Comparison | BrokerageCalc',
   description: 'Compare Real Brokerage vs eXp Realty commission splits, revenue share programs, caps, and total earnings potential. Data-driven analysis for 2025.',
   keywords: [
     'Real Brokerage vs eXp Realty',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Real Brokerage vs eXp Realty 2025: Complete Comparison',
     description: 'Compare Real Brokerage vs eXp Realty commission splits, revenue share programs, caps, and total earnings potential.',
-    url: 'https://brokeragecompass.com/resources/real-brokerage-vs-exp-realty',
+    url: 'https://brokeragecalc.com/resources/real-brokerage-vs-exp-realty',
     type: 'article',
     publishedTime: '2025-08-26',
   },
@@ -33,8 +33,8 @@ export default function RealVsExpPage() {
         title="Real Brokerage vs eXp Realty 2025: Complete Comparison"
         description="Compare Real Brokerage vs eXp Realty commission splits, revenue share programs, caps, and total earnings potential."
         publishDate="2025-08-26"
-        author="BrokerageCompass Team"
-        url="https://brokeragecompass.com/resources/real-brokerage-vs-exp-realty"
+        author="BrokerageCalc Team"
+        url="https://brokeragecalc.com/resources/real-brokerage-vs-exp-realty"
       />
       
       <div className="min-h-screen bg-white">

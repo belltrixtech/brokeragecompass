@@ -27,7 +27,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const baseUrl = 'https://brokeragecompass.com';
+  const baseUrl = 'https://brokeragecalc.com';
   const articleUrl = `${baseUrl}/resources/${slug}`;
 
   return (
@@ -36,7 +36,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         title={post.title}
         description={post.excerpt}
         publishDate={post.date}
-        author="BrokerageCompass Team"
+        author="BrokerageCalc Team"
         url={articleUrl}
       />
       

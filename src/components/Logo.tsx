@@ -1,7 +1,7 @@
 import React from 'react';
 
-// Main logo component with full compass design
-export const BrokerageCompassLogo = ({ size = 40, className = "" }) => {
+// Main logo component with calculator design  
+export const BrokerageCalcLogo = ({ size = 40, className = "" }) => {
   return (
     <svg 
       width={size} 
@@ -91,21 +91,21 @@ export const BrokerageCompassLogo = ({ size = 40, className = "" }) => {
 };
 
 // Logo with text component
-export const BrokerageCompassLogoWithText = ({ size = "md", orientation = "horizontal", showTagline = true }) => {
+export const BrokerageCalcLogoWithText = ({ size = "md", orientation = "horizontal", showTagline = true }) => {
   const logoSize = size === "sm" ? 32 : size === "lg" ? 56 : 40;
   const textSize = size === "sm" ? "text-lg" : size === "lg" ? "text-2xl" : "text-xl";
   
   if (orientation === "vertical") {
     return (
       <div className="flex flex-col items-center gap-2">
-        <BrokerageCompassLogo size={logoSize} />
+        <BrokerageCalcLogo size={logoSize} />
         <div className="text-center">
           <div className={`${textSize} font-bold text-slate-700`}>
-            BrokerageCompass
+            BrokerageCalc
           </div>
           {showTagline && (
             <div className="text-sm text-slate-500">
-              Navigate Your Real Estate Career
+              Calculate Your Real Estate Earnings
             </div>
           )}
         </div>
@@ -115,14 +115,14 @@ export const BrokerageCompassLogoWithText = ({ size = "md", orientation = "horiz
   
   return (
     <div className="flex items-center gap-3">
-      <BrokerageCompassLogo size={logoSize} />
+      <BrokerageCalcLogo size={logoSize} />
       <div>
         <div className={`${textSize} font-bold text-slate-700`}>
-          BrokerageCompass
+          BrokerageCalc
         </div>
         {showTagline && (
           <div className="text-sm text-slate-500">
-            Navigate Your Real Estate Career
+            Calculate Your Real Estate Earnings
           </div>
         )}
       </div>
@@ -131,7 +131,7 @@ export const BrokerageCompassLogoWithText = ({ size = "md", orientation = "horiz
 };
 
 // Icon-only version for small spaces
-export const BrokerageCompassIcon = ({ size = 24, className = "", variant = "default" }) => {
+export const BrokerageCalcIcon = ({ size = 24, className = "", variant = "default" }) => {
   // Color variants
   const colors = {
     default: {
@@ -209,10 +209,10 @@ export const BrokerageCompassIcon = ({ size = 24, className = "", variant = "def
 };
 
 // Animated version for loading states
-export const BrokerageCompassLogoAnimated = ({ size = 40, className = "" }) => {
+export const BrokerageCalcLogoAnimated = ({ size = 40, className = "" }) => {
   return (
     <div className={`${className} relative`}>
-      <BrokerageCompassLogo size={size} />
+      <BrokerageCalcLogo size={size} />
       <style jsx>{`
         .compass-needle {
           animation: spin 4s linear infinite;

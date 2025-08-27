@@ -34,7 +34,7 @@ export const FaviconGenerator = () => {
         <circle cx="${size/2}" cy="${size/2}" r="${Math.max(1, size/20)}" fill="#475569"/>
         
         ${includeText && size >= 256 ? `
-        <text x="${size/2}" y="${size - size/16}" font-family="system-ui, -apple-system, sans-serif" font-size="${size/16}" font-weight="600" text-anchor="middle" fill="#475569">BrokerageCompass</text>
+        <text x="${size/2}" y="${size - size/16}" font-family="system-ui, -apple-system, sans-serif" font-size="${size/16}" font-weight="600" text-anchor="middle" fill="#475569">BrokerageCalc</text>
         ` : ''}
       </svg>
     `;
@@ -116,7 +116,7 @@ export const FaviconGenerator = () => {
     <div className="max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-lg">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Favicon Generator</h2>
       <p className="text-gray-600 mb-8">
-        Generate all necessary favicon formats for BrokerageCompass using the custom compass logo.
+        Generate all necessary favicon formats for BrokerageCalc using the custom compass logo.
       </p>
 
       {/* Preview Section */}

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'Real Estate Brokerage Calculators | BrokerageCompass',
+  title: 'Real Estate Brokerage Calculators | BrokerageCalc',
   description: 'Calculate earnings for specific real estate brokerages. Dedicated calculators for Real Brokerage, eXp Realty, and more.',
   keywords: [
     'real estate calculator',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Real Estate Brokerage Calculators',
     description: 'Calculate earnings for specific real estate brokerages. Dedicated calculators for Real Brokerage, eXp Realty, and more.',
-    url: 'https://brokeragecompass.com/calculators',
+    url: 'https://brokeragecalc.com/calculators',
     type: 'website',
   },
   robots: {

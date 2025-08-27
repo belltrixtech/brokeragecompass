@@ -69,7 +69,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           </ul>
           
           <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Making the Decision</h2>
-          <p class="text-gray-700 mb-6">Use tools like the <a href="/calculator" class="text-cyan-600 hover:text-cyan-700 font-medium">BrokerageCompass calculator</a> to run the numbers on your specific situation. Remember, the cheapest option isn't always the best if it doesn't provide the support you need to succeed.</p>
+          <p class="text-gray-700 mb-6">Use tools like the <a href="/calculator" class="text-cyan-600 hover:text-cyan-700 font-medium">BrokerageCalc calculator</a> to run the numbers on your specific situation. Remember, the cheapest option isn't always the best if it doesn't provide the support you need to succeed.</p>
           
           <div class="bg-cyan-50 border border-cyan-200 rounded-lg p-6 my-8">
             <h3 class="text-lg font-semibold text-cyan-900 mb-2">Quick Tip</h3>
@@ -132,7 +132,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           </ul>
           
           <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Revenue Share Calculations</h2>
-          <p class="text-gray-700 mb-6">Use the <a href="/calculator" class="text-cyan-600 hover:text-cyan-700 font-medium">BrokerageCompass calculator</a> to model revenue share potential based on different recruiting scenarios. The numbers can be substantial for active recruiters.</p>
+          <p class="text-gray-700 mb-6">Use the <a href="/calculator" class="text-cyan-600 hover:text-cyan-700 font-medium">BrokerageCalc calculator</a> to model revenue share potential based on different recruiting scenarios. The numbers can be substantial for active recruiters.</p>
           
           <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-6 my-8">
             <h3 class="text-lg font-semibold text-emerald-900 mb-2">Example Scenario</h3>
@@ -217,7 +217,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           
           <div class="bg-cyan-50 border border-cyan-200 rounded-lg p-6 my-8">
             <h3 class="text-lg font-semibold text-cyan-900 mb-2">Run the Numbers</h3>
-            <p class="text-cyan-800 mb-0">Use the <a href="/calculator" class="text-cyan-600 hover:text-cyan-700 font-medium">BrokerageCompass calculator</a> to compare actual earnings potential between different cloud and traditional brokerages based on your production level.</p>
+            <p class="text-cyan-800 mb-0">Use the <a href="/calculator" class="text-cyan-600 hover:text-cyan-700 font-medium">BrokerageCalc calculator</a> to compare actual earnings potential between different cloud and traditional brokerages based on your production level.</p>
           </div>
         </div>
       `,
@@ -294,7 +294,7 @@ export const getBlogPost = (slug: string): BlogPost | null => {
           
           <div class="bg-cyan-50 border border-cyan-200 rounded-lg p-6 my-8">
             <h3 class="text-lg font-semibold text-cyan-900 mb-2">Compare Your Options</h3>
-            <p class="text-cyan-800 mb-0">Use the <a href="/calculator" class="text-cyan-600 hover:text-cyan-700 font-medium">BrokerageCompass calculator</a> to compare how different commission structures would affect your take-home pay based on your production goals.</p>
+            <p class="text-cyan-800 mb-0">Use the <a href="/calculator" class="text-cyan-600 hover:text-cyan-700 font-medium">BrokerageCalc calculator</a> to compare how different commission structures would affect your take-home pay based on your production goals.</p>
           </div>
         </div>
       `,

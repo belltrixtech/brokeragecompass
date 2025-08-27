@@ -4,7 +4,7 @@ import RealBrokerageCalculator from '@/components/RealBrokerageCalculator'
 import ArticleSchema from '@/components/ArticleSchema'
 
 export const metadata: Metadata = {
-  title: 'Real Brokerage Commission Calculator 2025 - Calculate Your Earnings | BrokerageCompass',
+  title: 'Real Brokerage Commission Calculator 2025 - Calculate Your Earnings | BrokerageCalc',
   description: 'Calculate your potential earnings with Real Brokerage. Compare commission splits, revenue share, stock awards, and total annual income. Free calculator tool.',
   keywords: [
     'Real Brokerage calculator',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Real Brokerage Commission Calculator 2025',
     description: 'Calculate your potential earnings with Real Brokerage including commission splits, revenue share, and stock awards.',
-    url: 'https://brokeragecompass.com/calculators/real-brokerage',
+    url: 'https://brokeragecalc.com/calculators/real-brokerage',
     type: 'article',
   },
   robots: {
@@ -33,8 +33,8 @@ export default function RealBrokerageCalculatorPage() {
         title="Real Brokerage Commission Calculator 2025"
         description="Calculate your potential earnings with Real Brokerage including commission splits, revenue share, and stock awards."
         publishDate="2025-01-20"
-        author="BrokerageCompass Team"
-        url="https://brokeragecompass.com/calculators/real-brokerage"
+        author="BrokerageCalc Team"
+        url="https://brokeragecalc.com/calculators/real-brokerage"
       />
       
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">

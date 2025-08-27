@@ -26,10 +26,10 @@ export default function ArticleSchema({
     },
     "publisher": {
       "@type": "Organization",
-      "name": "BrokerageCompass",
+      "name": "BrokerageCalc",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://brokeragecompass.com/favicon.svg"
+        "url": "https://brokeragecalc.com/favicon.svg"
       }
     },
     "url": url,

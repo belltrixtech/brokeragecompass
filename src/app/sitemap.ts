@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllBlogPosts } from '../utils/blogData';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://brokeragecompass.com';
+  const baseUrl = 'https://brokeragecalc.com';
   const currentDate = new Date().toISOString();
   
   // Get all blog posts

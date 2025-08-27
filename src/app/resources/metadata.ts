@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { getBlogPost } from '../../utils/blogData';
 
 export const metadata: Metadata = {
-  title: 'Real Estate Brokerage Resources & Guides | BrokerageCompass',
+  title: 'Real Estate Brokerage Resources & Guides | BrokerageCalc',
   description: 'Expert guides on choosing the right real estate brokerage, understanding commission splits, revenue share, and maximizing your agent career.',
   keywords: [
     'real estate brokerage guides',
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Real Estate Brokerage Resources & Guides',
     description: 'Expert guides on choosing the right real estate brokerage, understanding commission splits, revenue share, and maximizing your agent career.',
-    url: 'https://brokeragecompass.com/resources',
-    siteName: 'BrokerageCompass',
+    url: 'https://brokeragecalc.com/resources',
+    siteName: 'BrokerageCalc',
     type: 'website',
   },
   twitter: {
@@ -39,24 +39,24 @@ export function generateArticleMetadata(slug: string): Metadata {
   
   if (!post) {
     return {
-      title: 'Article Not Found | BrokerageCompass',
+      title: 'Article Not Found | BrokerageCalc',
       description: 'The requested article could not be found.',
     };
   }
 
-  const baseUrl = 'https://brokeragecompass.com';
+  const baseUrl = 'https://brokeragecalc.com';
   const articleUrl = `${baseUrl}/resources/${slug}`;
 
   return {
-    title: `${post.title} | BrokerageCompass`,
+    title: `${post.title} | BrokerageCalc`,
     description: post.excerpt,
     keywords: post.keywords,
-    authors: [{ name: 'BrokerageCompass Team' }],
+    authors: [{ name: 'BrokerageCalc Team' }],
     openGraph: {
       title: post.title,
       description: post.excerpt,
       url: articleUrl,
-      siteName: 'BrokerageCompass',
+      siteName: 'BrokerageCalc',
       type: 'article',
       publishedTime: post.date,
     },

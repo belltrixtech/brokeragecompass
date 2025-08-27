@@ -301,7 +301,7 @@ export const trackReferralConversion = (brokerage: string, userGCI: number) => {
   track('referral_conversion', {
     brokerage: brokerage,
     user_gci: userGCI,
-    conversion_source: 'brokeragecompass_calculator'
+    conversion_source: 'brokeragecalc_calculator'
   });
   
   trackGAEvent('referral_conversion', {
