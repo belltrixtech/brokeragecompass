@@ -151,7 +151,7 @@ const cloudBrokerages: BrokerageData[] = [
     fees: {
       startup: 249,
       annual: 750,
-      perTransaction: 30
+      perTransaction: 30 // This is BEOP fee, applies to ALL transactions
     },
     revenueShare: {
       tier1Percentage: 5,
@@ -199,9 +199,9 @@ const cloudBrokerages: BrokerageData[] = [
     cap: 15000,
     fees: {
       startup: 99,
-      monthly: 99,
+      monthly: 149, // Corrected to $149/month = $1,788 annually
       perTransaction: 0,
-      percentageOfSale: 0.001,
+      percentageOfSale: 0.001, // 0.1% of sale price
       maxPerTransaction: 500
     },
     revenueShare: {
@@ -224,12 +224,13 @@ const cloudBrokerages: BrokerageData[] = [
     brokerageSplit: 20,
     cap: 15000,
     fees: {
+      monthly: 119, // Average of $89-149 range for Rev Share Partner plan
       perTransaction: 195
     },
     revenueShare: {
       tier1Percentage: 0,
-      description: 'Estimated $400 per recruited agent',
-      multiTierDescription: 'Revenue share scales with production level'
+      description: 'Revenue share up to $775 per recruited agent',
+      multiTierDescription: 'Revenue share scales with production level and plan type'
     },
     stockAwards: {
       maxAnnual: 5000,
@@ -709,7 +710,7 @@ export default function Calculator() {
                         <div style="font-size: 10px; color: #6b7280;">${result.brokerage.agentSplit}/${result.brokerage.brokerageSplit} split</div>
                       </td>
                       <td style="padding: 12px 16px; text-align: right; font-weight: 500; ${index < results.length - 1 ? 'border-bottom: 1px solid #e5e7eb;' : ''}">
-                        ${formatCurrency(result.netIncome - result.totalFees)}
+                        ${formatCurrency(result.netIncome)}
                       </td>
                       <td style="padding: 12px 16px; text-align: right; font-weight: 500; ${index < results.length - 1 ? 'border-bottom: 1px solid #e5e7eb;' : ''}">
                         ${formatCurrency(result.revenueShareIncome)}
@@ -937,8 +938,11 @@ export default function Calculator() {
         return cappedEpiqueRevenue * numRecruits;
 
       case 'LPT Realty':
-        const baseRate = effectiveRecruits >= 6 ? 450 : 400;
-        return baseRate * numRecruits;
+        // LPT revenue share varies by production level and plan
+        // Rev Share Partner plan: up to $775 per recruit based on their production
+        const baseRate = effectiveRecruits >= 6 ? 775 : 600;
+        const productionMultiplier = recruitAvgGci >= 100000 ? 1.0 : 0.7; // Reduced for lower production recruits
+        return Math.floor(baseRate * numRecruits * productionMultiplier);
 
       default:
         return 0;
@@ -991,41 +995,25 @@ export default function Calculator() {
       stockAwards = 16000;
     }
     
-    // Basic stock awards for capping
-    if (GCI >= 80000) { // Assuming they cap
-      stockAwards += 400; // Annual capping bonus
-    }
+    // No automatic capping bonus - ICON awards only
     
     return stockAwards;
   };
 
   const calculateEpiqueStockAwards = (GCI: number, transactions: number, isHighProducer: boolean) => {
-    let stockAwards = 0;
-    
-    // Power Agent Award: Up to $15,000
-    if (isHighProducer && (transactions >= 24 || GCI >= 1000000)) {
-      stockAwards = 15000;
-    } else if (transactions >= 15) {
-      stockAwards = 7500; // Partial award
-    }
-    
-    return stockAwards;
+    // Temporarily removing stock awards - calculation needs to be verified
+    return 0;
   };
 
   const calculateLPTStockAwards = (GCI: number, transactions: number, isHighProducer: boolean) => {
     let stockAwards = 0;
     
-    // Gold Badge: 15 homes annually
-    if (transactions >= 15) {
-      stockAwards = 2000; // Estimated value (not publicly traded)
-    }
+    // LPT stock awards are not cash awards but recognition badges with theoretical value
+    // For pure commission income calculation, these should not be included
+    // Gold Badge: 15 homes annually - no cash value
+    // Black Badge: 35 homes annually - no cash value
     
-    // Black Badge: 35 homes annually  
-    if (transactions >= 35) {
-      stockAwards = 5000; // Estimated value (not publicly traded)
-    }
-    
-    // Note: LPT is not publicly traded, so stock value is theoretical
+    // Return 0 for commission income calculation
     return stockAwards;
   };
 
@@ -1169,7 +1157,7 @@ export default function Calculator() {
     const numTransactions = parseFloat(transactions) || 0;
     const numRecruits = parseFloat(recruits) || 0;
     const recruitAvgGci = parseFloat(recruitGci) || 0;
-    const calculatedAvgSalePrice = grossCommission && numTransactions ? grossCommission / numTransactions * 20 : 0;
+    const calculatedAvgSalePrice = grossCommission && numTransactions ? grossCommission / numTransactions * 100 : 0;
     const userAvgSalePrice = parseFloat(avgSalePrice) || calculatedAvgSalePrice;
 
     if (grossCommission <= 0) {
@@ -1215,11 +1203,26 @@ export default function Calculator() {
         let annualFees = 0;
         let transactionFees = 0;
         
-        console.log("\n--- FEE BREAKDOWN ---");
-        if (brokerage.fees.startup) {
-          annualFees += brokerage.fees.startup;
-          console.log("Startup fee:", brokerage.fees.startup);
+        // Add detailed LPT debugging
+        if (brokerage.name === 'LPT Realty') {
+          console.log("\n=== LPT REALTY DETAILED DEBUG ===");
+          console.log("Input GCI:", grossCommission);
+          console.log("Input Transactions:", numTransactions);
+          console.log("Brokerage split:", brokerage.brokerageSplit + "%");
+          console.log("Annual cap:", brokerage.cap);
+          console.log("Monthly fee:", brokerage.fees.monthly);
+          console.log("Per-transaction fee:", brokerage.fees.perTransaction);
+          console.log("Calculated brokerage commission (20% of GCI):", brokerageCommission);
+          console.log("Cap reached?", capReached);
+          console.log("=== END LPT SETUP ===");
         }
+        
+        console.log("\n--- FEE BREAKDOWN ---");
+        // Note: Startup fees are excluded from annual calculations as they're one-time costs
+        // if (brokerage.fees.startup) {
+        //   annualFees += brokerage.fees.startup;
+        //   console.log("Startup fee:", brokerage.fees.startup);
+        // }
         if (brokerage.fees.annual) {
           annualFees += brokerage.fees.annual;
           console.log("Annual fee:", brokerage.fees.annual);
@@ -1263,14 +1266,84 @@ export default function Calculator() {
         
         // Special case: eXp Realty risk management fee
         if (brokerage.name === 'eXp Realty' && numTransactions > 0) {
-          const riskManagementFee = Math.min(40 * numTransactions, 500);
+          const riskManagementFee = Math.min(60 * numTransactions, 750);
           annualFees += riskManagementFee;
-          console.log("eXp Risk management fee:", "40 x", numTransactions, "= $", (40 * numTransactions), "capped at $500 = $", riskManagementFee);
+          console.log("eXp Risk management fee:", "60 x", numTransactions, "= $", (60 * numTransactions), "capped at $750 = $", riskManagementFee);
         }
         
-        const totalFees = annualFees + transactionFees;
+        // Special case: Real Brokerage post-cap transaction fees
+        if (brokerage.name === 'Real Brokerage' && capReached && numTransactions > 0) {
+          const gciToCap = brokerage.cap / (brokerage.brokerageSplit / 100); // ~$80,000 GCI to cap
+          const postCapGci = Math.max(0, grossCommission - gciToCap);
+          
+          if (postCapGci > 0) {
+            const avgCommissionPerTransaction = grossCommission / numTransactions;
+            const postCapTransactions = Math.floor(postCapGci / avgCommissionPerTransaction);
+            
+            // Apply correct post-cap transaction fees (check if high producer for elite rate)
+            const postCapTransactionFee = isHighProducer ? 129 : 285;
+            const postCapTransactionFees = postCapTransactions * postCapTransactionFee;
+            
+            transactionFees += postCapTransactionFees;
+            console.log("Real Brokerage post-cap transaction fees:", postCapTransactions, "x $", postCapTransactionFee, "=", postCapTransactionFees);
+          }
+        }
+        
+        // Special case: eXp Realty post-cap transaction fees
+        if (brokerage.name === 'eXp Realty' && capReached && numTransactions > 0) {
+          const gciToCap = brokerage.cap / (brokerage.brokerageSplit / 100); // $80,000 GCI to cap
+          const postCapGci = Math.max(0, grossCommission - gciToCap);
+          
+          if (postCapGci > 0) {
+            const avgCommissionPerTransaction = grossCommission / numTransactions;
+            const postCapTransactions = Math.floor(postCapGci / avgCommissionPerTransaction);
+            
+            // eXp post-cap fees: $250 for first 20, then $75 after that
+            const highFeeCount = Math.min(postCapTransactions, 20);
+            const lowFeeCount = Math.max(0, postCapTransactions - 20);
+            const postCapTransactionFees = (highFeeCount * 250) + (lowFeeCount * 75);
+            
+            transactionFees += postCapTransactionFees;
+            console.log("eXp post-cap transaction fees:", highFeeCount, "x $250 +", lowFeeCount, "x $75 =", postCapTransactionFees);
+          }
+        }
+        
+        // Special case: LPT Realty post-cap transaction fees
+        // Note: For standard fee calculation, LPT charges $195 per transaction regardless of cap status
+        // Post-cap reduced fees would only apply to actual high-volume scenarios beyond typical calculations
+        if (brokerage.name === 'LPT Realty' && capReached && numTransactions > 0) {
+          // For the standard calculator, we don't apply post-cap transaction fees
+          // as all transactions are charged at the standard $195 rate
+          console.log("LPT: Standard $195 per transaction applies to all transactions");
+        }
+        
+        // Special case: Epique Realty transaction fee reduction
+        if (brokerage.name === 'Epique Realty' && numTransactions > 0 && userAvgSalePrice > 0) {
+          // Recalculate Epique transaction fees with proper reduction logic
+          // Reset transaction fees to recalculate with reduction
+          transactionFees = 0;
+          
+          let totalTransactionFeesAccumulated = 0;
+          for (let i = 0; i < numTransactions; i++) {
+            let fee = userAvgSalePrice * brokerage.fees.percentageOfSale; // 0.1% of sale price
+            fee = Math.min(fee, brokerage.fees.maxPerTransaction || 500); // Cap at $500 per transaction
+            
+            // After $5,000 in fees paid, reduce to $250 per transaction
+            if (totalTransactionFeesAccumulated >= 5000) {
+              fee = Math.min(fee, 250);
+            }
+            
+            transactionFees += fee;
+            totalTransactionFeesAccumulated += fee;
+          }
+        }
+        
+        // Include company split in total fees for accurate breakdown display
+        const companySplit = capReached ? brokerage.cap : brokerageCommission;
+        const totalFees = companySplit + annualFees + transactionFees;
         
         console.log("\n--- FINAL CALCULATIONS ---");
+        console.log("Company split:", companySplit);
         console.log("Annual fees total:", annualFees);
         console.log("Transaction fees total:", transactionFees);
         console.log("Total fees:", totalFees);
@@ -1281,12 +1354,12 @@ export default function Calculator() {
         if (capReached) {
           const commissionAtCap = brokerage.cap / (brokerage.brokerageSplit / 100);
           postCapIncome = grossCommission - commissionAtCap;
-          netIncome = grossCommission - brokerage.cap;
+          netIncome = grossCommission - totalFees;
           console.log("Cap reached! Brokerage payment capped at:", brokerage.cap);
-          console.log("Net income after cap:", grossCommission, "-", brokerage.cap, "=", netIncome);
+          console.log("Net income after cap:", grossCommission, "- totalFees", totalFees, "=", netIncome);
         } else {
-          netIncome = agentCommission;
-          console.log("No cap reached. Net income:", netIncome);
+          netIncome = grossCommission - totalFees;
+          console.log("No cap reached. Net income:", grossCommission, "- totalFees", totalFees, "=", netIncome);
         }
         
         const revenueShareIncome = calculateEnhancedRevenueShare(brokerage, numRecruits, recruitAvgGci, recruitingGoal);
@@ -1300,9 +1373,30 @@ export default function Calculator() {
         const preCapMonthly = (monthlyGCI * (brokerage.agentSplit / 100)) - monthlyFees;
         const postCapMonthly = monthlyGCI - monthlyFees;
         
-        const totalAnnualIncome = netIncome - totalFees + revenueShareIncome + stockAwardIncome;
+        const totalAnnualIncome = netIncome + revenueShareIncome + stockAwardIncome;
         
-        console.log("Final calculation: netIncome", netIncome, "- totalFees", totalFees, "+ revenueShare", revenueShareIncome, "+ stockAwards", stockAwardIncome, "=", totalAnnualIncome);
+        console.log("Final calculation: netIncome", netIncome, "+ revenueShare", revenueShareIncome, "+ stockAwards", stockAwardIncome, "=", totalAnnualIncome);
+        
+        // Additional LPT verification
+        if (brokerage.name === 'LPT Realty') {
+          console.log("\n=== LPT FINAL VERIFICATION ===");
+          console.log("Expected calculation for $80K GCI / 20 transactions:");
+          console.log("Company Split should be: $15,000");
+          console.log("Monthly Fees should be: $1,428 ($119 × 12)");
+          console.log("Transaction Fees should be: $3,900 ($195 × 20)");
+          console.log("Total Fees should be: $20,328");
+          console.log("Net Income should be: $59,672");
+          console.log("ACTUAL Company Split:", companySplit);
+          console.log("ACTUAL Monthly Fees:", brokerage.fees.monthly * 12);
+          console.log("ACTUAL Transaction Fees:", transactionFees);
+          console.log("ACTUAL Total Fees:", totalFees);
+          console.log("ACTUAL Net Income:", netIncome);
+          const expectedNetIncome = 80000 - 20328;
+          const difference = netIncome - expectedNetIncome;
+          console.log("Difference from expected:", difference);
+          console.log("=== END LPT VERIFICATION ===");
+        }
+        
         console.log(`=== END ${brokerage.name.toUpperCase()} DEBUG ===\n`);
 
         // Calculate comparison metrics if current brokerage is enabled
@@ -2677,7 +2771,7 @@ export default function Calculator() {
                             <div className="flex justify-between items-center">
                               <span className="text-sm font-medium text-gray-600">Commission Income:</span>
                               <span className="font-bold text-green-600 text-lg">
-                                {formatCurrency(result.netIncome - result.totalFees)}
+                                {formatCurrency(result.netIncome)}
                               </span>
                             </div>
                             
@@ -2859,7 +2953,7 @@ export default function Calculator() {
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm font-bold text-green-600">
-                                      {formatCurrency(result.netIncome - result.totalFees)}
+                                      {formatCurrency(result.netIncome)}
                                     </div>
                                   </td>
                                   <td className="px-6 py-4 whitespace-nowrap">

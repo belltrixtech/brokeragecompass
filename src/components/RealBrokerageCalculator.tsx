@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { trackCalculatorUsage, trackReferralClick } from '@/utils/analytics'
+import BrokerageDisclaimer from './BrokerageDisclaimer'
 
 export default function RealBrokerageCalculator() {
   const [gci, setGci] = useState(80000)
@@ -8,27 +9,81 @@ export default function RealBrokerageCalculator() {
   const [recruits, setRecruits] = useState(0)
   const [isHighProducer, setIsHighProducer] = useState(false)
   
-  // Real Brokerage specific calculations
+  // Real Brokerage specific calculations with correct fee structure
   const calculateRealEarnings = () => {
-    const split = 0.85
-    const cap = 12000
-    const fees = Math.min(gci * (1 - split), cap)
-    const commission = gci - fees
+    // Constants based on official Real Brokerage documentation
+    const COMMISSION_SPLIT = 0.85
+    const ANNUAL_CAP = 12000
+    const BEOP_FEE = 30
+    const ANNUAL_FEE = 750
+    const POST_CAP_TRANSACTION_FEE = 285
+    const ELITE_TRANSACTION_FEE = 129
     
-    // Revenue share: $4000 per recruit (simplified)
-    const revenueShare = recruits * 4000
+    // Pre-cap calculations
+    const companySplitFees = gci * (1 - COMMISSION_SPLIT) // 15% of GCI
+    const cappedSplitFees = Math.min(companySplitFees, ANNUAL_CAP)
+    
+    // BEOP fees apply to ALL transactions
+    const beopFees = transactions * BEOP_FEE
+    
+    // Total fees before considering post-cap transactions
+    const totalPreCapFees = cappedSplitFees + beopFees + ANNUAL_FEE
+    
+    // Determine if agent caps during the year
+    const agentCaps = companySplitFees >= ANNUAL_CAP
+    
+    let postCapTransactionFees = 0
+    let postCapCommission = 0
+    
+    if (agentCaps) {
+      // Calculate post-cap transactions and fees
+      const gciToCap = ANNUAL_CAP / (1 - COMMISSION_SPLIT) // ~$80,000 GCI to cap
+      const postCapGci = Math.max(0, gci - gciToCap)
+      
+      // Post-cap transactions (estimate based on remaining GCI)
+      const avgCommissionPerTransaction = gci / transactions
+      const postCapTransactions = Math.floor(postCapGci / avgCommissionPerTransaction)
+      
+      // Apply correct transaction fees
+      const transactionFee = isHighProducer ? ELITE_TRANSACTION_FEE : POST_CAP_TRANSACTION_FEE
+      postCapTransactionFees = postCapTransactions * transactionFee
+      
+      postCapCommission = postCapGci
+    }
+    
+    // Calculate final numbers
+    const preCapCommission = Math.min(gci, ANNUAL_CAP / (1 - COMMISSION_SPLIT)) * COMMISSION_SPLIT
+    const totalCommission = preCapCommission + postCapCommission
+    const totalFees = totalPreCapFees + postCapTransactionFees
+    
+    // The net income should be GCI minus all fees, not commission minus fees
+    // This is because the company split is already accounted for in the fees
+    const netIncome = gci - totalFees
+    
+    // Revenue share calculation (simplified)
+    const revenueShare = recruits * 4000 // Up to $4,000 per Tier 1 recruit
     
     // Stock awards for high producers
     const stockAwards = isHighProducer && gci >= 250000 ? 16000 : 0
     
-    const totalEarnings = commission + revenueShare + stockAwards
+    const totalAnnualIncome = netIncome + revenueShare + stockAwards
     
     return {
-      commission,
-      fees,
+      grossCommissionIncome: gci,
+      commission: totalCommission,
+      fees: totalFees,
+      breakdown: {
+        companySplit: cappedSplitFees,
+        beopFees: beopFees,
+        annualFee: ANNUAL_FEE,
+        postCapTransactionFees: postCapTransactionFees
+      },
       revenueShare,
       stockAwards,
-      totalEarnings
+      netIncome,
+      totalAnnualIncome,
+      agentCaps,
+      capReachedAt: agentCaps ? `${Math.round((ANNUAL_CAP / (gci * (1 - COMMISSION_SPLIT))) * 12)} months` : 'Does not cap'
     }
   }
   
@@ -123,34 +178,69 @@ export default function RealBrokerageCalculator() {
           
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-slate-600">Commission (after fees)</span>
-              <span className="font-semibold text-lg">${results.commission.toLocaleString()}</span>
+              <span className="text-slate-600">Gross Commission Income</span>
+              <span className="font-semibold text-lg">${results.grossCommissionIncome.toLocaleString()}</span>
             </div>
             
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600">Annual fees paid</span>
-              <span className="font-semibold text-red-600">-${results.fees.toLocaleString()}</span>
+            <div className="border-t pt-4">
+              <h4 className="font-medium text-slate-800 mb-3">Fee Breakdown:</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Company split (15%)</span>
+                  <span className="text-red-600">-${results.breakdown.companySplit.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600">BEOP fees ({transactions} × $30)</span>
+                  <span className="text-red-600">-${results.breakdown.beopFees.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Annual brokerage fee</span>
+                  <span className="text-red-600">-${results.breakdown.annualFee.toLocaleString()}</span>
+                </div>
+                {results.breakdown.postCapTransactionFees > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">Post-cap transaction fees</span>
+                    <span className="text-red-600">-${results.breakdown.postCapTransactionFees.toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="flex justify-between font-medium border-t pt-2">
+                  <span className="text-slate-800">Total Fees</span>
+                  <span className="text-red-600">-${results.fees.toLocaleString()}</span>
+                </div>
+              </div>
             </div>
-            
-            {results.revenueShare > 0 && (
-              <div className="flex justify-between items-center">
-                <span className="text-slate-600">Revenue share</span>
-                <span className="font-semibold text-green-600">+${results.revenueShare.toLocaleString()}</span>
-              </div>
-            )}
-            
-            {results.stockAwards > 0 && (
-              <div className="flex justify-between items-center">
-                <span className="text-slate-600">Stock awards</span>
-                <span className="font-semibold text-green-600">+${results.stockAwards.toLocaleString()}</span>
-              </div>
-            )}
             
             <div className="border-t pt-4">
               <div className="flex justify-between items-center">
-                <span className="text-lg font-semibold">Total Annual Income</span>
-                <span className="text-2xl font-bold text-cyan-600">${results.totalEarnings.toLocaleString()}</span>
+                <span className="text-lg font-semibold">Net Commission Income</span>
+                <span className="text-2xl font-bold text-green-600">${results.netIncome.toLocaleString()}</span>
               </div>
+              
+              {results.revenueShare > 0 && (
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-slate-600">Revenue Share</span>
+                  <span className="text-lg font-semibold text-green-600">+${results.revenueShare.toLocaleString()}</span>
+                </div>
+              )}
+              
+              {results.stockAwards > 0 && (
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-slate-600">Stock Awards</span>
+                  <span className="text-lg font-semibold text-green-600">+${results.stockAwards.toLocaleString()}</span>
+                </div>
+              )}
+              
+              <div className="flex justify-between items-center mt-4 pt-4 border-t">
+                <span className="text-xl font-bold">Total Annual Income</span>
+                <span className="text-3xl font-bold text-cyan-600">${results.totalAnnualIncome.toLocaleString()}</span>
+              </div>
+            </div>
+            
+            <div className="bg-slate-50 p-3 rounded text-sm text-slate-600">
+              <p><strong>Cap Status:</strong> {results.capReachedAt}</p>
+              {results.agentCaps && (
+                <p className="mt-1">After capping: 100% commission retention with ${isHighProducer ? '129' : '285'} transaction fee per deal</p>
+              )}
             </div>
           </div>
           
@@ -158,7 +248,7 @@ export default function RealBrokerageCalculator() {
           <div className="mt-6 p-4 bg-cyan-50 rounded-lg">
             <h4 className="font-semibold text-cyan-800 mb-2">Ready to join Real Brokerage?</h4>
             <p className="text-sm text-cyan-700 mb-3">
-              Based on your numbers, you could earn ${results.totalEarnings.toLocaleString()} annually with Real Brokerage.
+              Based on your numbers, you could earn ${results.totalAnnualIncome.toLocaleString()} annually with Real Brokerage.
             </p>
             <a
               href="https://bolt.therealbrokerage.com/register?sponsorCode=4oryuip&sponsorName=Nick%20Bellante"
@@ -175,6 +265,12 @@ export default function RealBrokerageCalculator() {
           </div>
         </div>
       </div>
+      
+      <BrokerageDisclaimer 
+        brokerageName="Real Brokerage"
+        lastUpdated="August 2025"
+        sourceUrl="https://support.therealbrokerage.com/hc/en-us/articles/14359725818519"
+      />
     </div>
   )
 }
