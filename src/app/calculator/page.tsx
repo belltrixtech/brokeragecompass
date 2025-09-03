@@ -969,52 +969,279 @@ export default function Calculator() {
   };
 
   const calculateRealStockAwards = (GCI: number, transactions: number, isHighProducer: boolean, numRecruits: number) => {
-    let stockAwards = 0;
+    let totalStockAwards = 0;
+    let cappingAward = 0;
+    let sppBonusShares = 0;
+    let eliteAward = 0;
+    let culturalAward = 0;
+    let recruitmentAwards = 0;
     
-    // Elite Agent Award: Up to $24,000
-    const isRecruiting = numRecruits > 0;
-    if (isHighProducer && isRecruiting && GCI >= 500000) {
-      stockAwards = 24000;
-    } else if (isHighProducer && transactions >= 20) {
-      stockAwards = 16000; // Partial award
+    // 1. CAPPING AWARD - $4,000 for reaching $12K cap
+    const companySplit = Math.min(GCI * 0.15, 12000);
+    const agentCaps = companySplit >= 12000;
+    
+    if (agentCaps) {
+      cappingAward = 4000;
     }
     
-    return stockAwards;
+    // 2. SPP BONUS SHARES - Assume participation for main calculator
+    if (GCI > 0) {
+      const gciToCap = 12000 / 0.15; // $80,000 GCI to cap
+      
+      if (agentCaps) {
+        // Pre-cap: 5% contribution + 10% bonus
+        const preCapGci = Math.min(GCI, gciToCap);
+        const preCapContribution = preCapGci * 0.05;
+        const preCapBonus = preCapContribution * 0.10;
+        
+        // Post-cap: 10% contribution + 15% bonus (up to $15K annual limit)
+        const postCapGci = Math.max(0, GCI - gciToCap);
+        const postCapContribution = Math.min(postCapGci * 0.10, 15000);
+        const postCapBonus = postCapContribution * 0.15;
+        
+        sppBonusShares = preCapBonus + postCapBonus;
+      } else {
+        // Pre-cap only: 5% contribution + 10% bonus
+        const preCapContribution = GCI * 0.05;
+        sppBonusShares = preCapContribution * 0.10;
+      }
+    }
+    
+    // 3. ELITE AGENT AWARD - $16K for high producers
+    let eliteAgent = false;
+    if (agentCaps) {
+      // Path 1: Post-cap production method
+      const gciToCap = 12000 / 0.15; // $80,000 GCI to cap
+      const postCapGci = Math.max(0, GCI - gciToCap);
+      
+      if (postCapGci > 0) {
+        const avgCommission = GCI / transactions;
+        const postCapTransactions = Math.floor(postCapGci / avgCommission);
+        const postCapFees = postCapTransactions * 285; // $285 per transaction
+        
+        // Check if $6K in post-cap fees achieved
+        if (postCapFees >= 6000) {
+          eliteAgent = true;
+          eliteAward = 16000;
+        }
+      }
+    }
+    
+    // Path 2: High GCI alternative ($500K+ GCI, 10+ transactions)
+    if (!eliteAgent && GCI >= 500000 && transactions >= 10) {
+      eliteAgent = true;
+      eliteAward = 16000;
+    }
+    
+    // 4. CULTURAL CONTRIBUTION AWARD - Additional $8K for Elite agents
+    if (eliteAgent) {
+      culturalAward = 8000; // Available for teaching at Real Academy
+    }
+    
+    // 5. AGENT RECRUITMENT AWARDS - $500-$2000 per qualified recruit
+    if (numRecruits > 0) {
+      recruitmentAwards = numRecruits * 1000; // Average $1K per recruit (varies by production)
+    }
+    
+    // Calculate total stock awards
+    totalStockAwards = cappingAward + sppBonusShares + eliteAward + culturalAward + recruitmentAwards;
+    
+    return Math.round(totalStockAwards);
   };
 
   const calculateExpStockAwards = (GCI: number, transactions: number, isHighProducer: boolean) => {
-    let stockAwards = 0;
+    let totalStockAwards = 0;
+    let iconAgent = false;
+    let productionAward = 0;
+    let culturalAward = 0;
+    let eventAward = 0;
+    let iconQualified = false;
     
-    // ICON Agent Award: Up to $16,000
-    const hitsICONRequirements = 
-      isHighProducer && 
-      (transactions >= 20 || GCI >= 500000) &&
-      transactions >= 10; // Minimum transaction requirement
+    // Calculate average commission
+    const avgCommission = transactions > 0 ? GCI / transactions : 0;
+    
+    // eXp cap details
+    const ANNUAL_CAP = 16000;
+    const POST_CAP_TRANSACTION_FEE = 250;
+    const ICON_QUALIFICATION_FEE_REQUIRED = 5000;
+    
+    // Calculate if agent caps
+    const companySplit = Math.min(GCI * 0.20, ANNUAL_CAP);
+    const agentCaps = companySplit >= ANNUAL_CAP;
+    
+    // Path 1: Volume-based ICON qualification (cap + 20 additional transactions)
+    if (agentCaps && avgCommission > 0) {
+      const gciToCap = ANNUAL_CAP / 0.20; // $80,000 GCI to cap at eXp
+      const postCapGci = Math.max(0, GCI - gciToCap);
+      const postCapTransactions = Math.floor(postCapGci / avgCommission);
+      const postCapFees = postCapTransactions * POST_CAP_TRANSACTION_FEE;
       
-    if (hitsICONRequirements) {
-      stockAwards = 16000;
+      // Need $5,000 in post-cap transaction fees (20+ transactions)
+      if (postCapFees >= ICON_QUALIFICATION_FEE_REQUIRED) {
+        iconQualified = true;
+        iconAgent = true;
+      }
     }
     
-    // No automatic capping bonus - ICON awards only
+    // Path 2: High GCI alternative ($500K+ GCI, 10+ transactions)
+    if (!iconQualified && GCI >= 500000 && transactions >= 10) {
+      // Calculate ICON Qualification Fee needed
+      let postCapFeesPaid = 0;
+      
+      if (agentCaps && avgCommission > 0) {
+        const gciToCap = ANNUAL_CAP / 0.20;
+        const postCapGci = Math.max(0, GCI - gciToCap);
+        const postCapTransactions = Math.floor(postCapGci / avgCommission);
+        postCapFeesPaid = postCapTransactions * POST_CAP_TRANSACTION_FEE;
+      }
+      
+      // Must pay remaining amount to reach $5,000 total
+      const iconFeeRequired = Math.max(0, ICON_QUALIFICATION_FEE_REQUIRED - postCapFeesPaid);
+      
+      // For calculation purposes, assume agent pays the qualification fee
+      iconQualified = true;
+      iconAgent = true;
+    }
     
-    return stockAwards;
+    // ICON Stock Awards (if qualified)
+    if (iconAgent) {
+      // Production Award: $8,000 (immediate upon qualification)
+      productionAward = 8000;
+      
+      // Cultural Commitment Award: $4,000 (through points system - assume 50% completion rate)
+      culturalAward = 4000 * 0.5; // Conservative estimate - not all agents complete cultural requirements
+      
+      // Event Attendance Award: $4,000 max ($2,000 per event - assume 1 event attended)
+      eventAward = 2000; // Conservative estimate for 1 event
+      
+      totalStockAwards = productionAward + culturalAward + eventAward;
+    }
+    
+    // Additional minor stock awards for all agents
+    let minorAwards = 0;
+    
+    // First transaction bonus: $200 in stock
+    if (transactions >= 1) {
+      minorAwards += 200;
+    }
+    
+    // Agent Stock Purchase Plan (5% commission investment + 5% discount)
+    // This is separate from ICON awards but available to all agents
+    const sppBonus = GCI * 0.01; // Conservative estimate: 2% effective bonus (lower participation rate)
+    
+    totalStockAwards += minorAwards + sppBonus;
+    
+    return Math.round(totalStockAwards);
   };
 
   const calculateEpiqueStockAwards = (GCI: number, transactions: number, isHighProducer: boolean) => {
-    // Temporarily removing stock awards - calculation needs to be verified
-    return 0;
+    let totalStockValue = 0;
+    let totalShares = 0;
+    let powerAward = false;
+    let stockAwards = 0;
+    
+    // Current stock price (private company, pre-IPO)
+    const CURRENT_STOCK_PRICE = 0.53;
+    
+    // Calculate total sales volume estimate (assume 2.5% commission or $400K avg per transaction)
+    const totalSalesVolume = transactions > 0 ? (GCI / 0.025) || (transactions * 400000) : 0;
+    
+    // Power Award thresholds
+    const POWER_AWARD_TRANSACTIONS = 24;
+    const POWER_AWARD_VOLUME = 10000000; // $10M
+    
+    // Stock award amounts (assume individual agent level for main calculator)
+    const POWER_AWARD_AMOUNT = 15000; // $15,000 in stock for individual agents
+    
+    // 1. JOINING BONUS - Free shares for joining Epique
+    let joiningBonus = 100; // Estimated shares for joining
+    totalShares += joiningBonus;
+    
+    // 2. FIRST SALE BONUS
+    if (transactions >= 1) {
+      let firstSaleBonus = 200; // Estimated shares for first sale
+      totalShares += firstSaleBonus;
+    }
+    
+    // 3. ANNIVERSARY BONUS - Annual loyalty reward
+    let anniversaryBonus = 50; // Estimated annual bonus shares
+    totalShares += anniversaryBonus;
+    
+    // 4. CAPPING BONUS - Stock for reaching commission cap
+    const companySplit = Math.min(GCI * 0.15, 15000);
+    const agentCaps = companySplit >= 15000;
+    
+    if (agentCaps) {
+      let cappingBonus = 500; // Estimated shares for capping
+      totalShares += cappingBonus;
+    }
+    
+    // 5. POWER AWARD - Major stock award for high producers
+    const qualifiesForPowerAward = transactions >= POWER_AWARD_TRANSACTIONS || totalSalesVolume >= POWER_AWARD_VOLUME;
+    
+    if (qualifiesForPowerAward) {
+      powerAward = true;
+      stockAwards = POWER_AWARD_AMOUNT;
+      
+      // Convert stock award to shares
+      const powerAwardShares = Math.round(stockAwards / CURRENT_STOCK_PRICE);
+      totalShares += powerAwardShares;
+    }
+    
+    // 6. PERFORMANCE BONUSES - Additional shares for ongoing production
+    const performanceShares = Math.floor(transactions / 3) * 25; // 25 shares per 3 transactions
+    totalShares += performanceShares;
+    
+    // 7. STOCK PURCHASE PLAN PARTICIPATION - 5% of commission invested with 20% discount
+    const sppInvestment = GCI * 0.05; // 5% of GCI invested
+    const sppShares = Math.round(sppInvestment / (CURRENT_STOCK_PRICE * 0.8)); // 20% discount
+    totalShares += sppShares;
+    
+    // Calculate total estimated value
+    totalStockValue = totalShares * CURRENT_STOCK_PRICE;
+    
+    return Math.round(totalStockValue);
   };
 
   const calculateLPTStockAwards = (GCI: number, transactions: number, isHighProducer: boolean) => {
-    let stockAwards = 0;
+    let totalStockValue = 0;
+    let stockShares = 0;
+    let goldBadge = false;
+    let blackBadge = false;
     
-    // LPT stock awards are not cash awards but recognition badges with theoretical value
-    // For pure commission income calculation, these should not be included
-    // Gold Badge: 15 homes annually - no cash value
-    // Black Badge: 35 homes annually - no cash value
+    // Note: LPT is private company - stock has no current market value
+    // Using estimated value of $1.42 per share (comparable to Real Brokerage for calculation purposes)
+    const ESTIMATED_STOCK_PRICE = 1.42;
     
-    // Return 0 for commission income calculation
-    return stockAwards;
+    // Badge thresholds (subject to adjustment by company)
+    const GOLD_BADGE_THRESHOLD = 15; // transactions
+    const BLACK_BADGE_THRESHOLD = 35; // transactions
+    
+    // First transaction bonus (assume Rev Share Partner plan - higher awards)
+    if (transactions >= 1) {
+      stockShares += 150; // 150 shares for first sale (Rev Share Partner)
+    }
+    
+    // Badge-based awards
+    if (transactions >= GOLD_BADGE_THRESHOLD) {
+      goldBadge = true;
+      stockShares += 500; // Additional shares for Gold Badge
+    }
+    
+    if (transactions >= BLACK_BADGE_THRESHOLD) {
+      blackBadge = true;
+      stockShares += 1000; // Additional shares for Black Badge (top 1%)
+    }
+    
+    // Additional performance-based awards (conservative estimate)
+    const additionalShares = Math.floor(transactions / 5) * 50; // 50 shares per 5 transactions
+    stockShares += additionalShares;
+    
+    // Calculate estimated value (important: stock is currently illiquid)
+    totalStockValue = stockShares * ESTIMATED_STOCK_PRICE;
+    
+    // Return estimated value but with understanding this is illiquid private stock
+    return Math.round(totalStockValue);
   };
 
   const calculateCapTimeline = (grossCommission: number, brokerageSplit: number, cap: number) => {
@@ -2834,7 +3061,10 @@ export default function Calculator() {
                               <span className="font-bold text-purple-600 text-lg">
                                 {formatCurrency(result.stockAwardIncome)}
                                 {result.brokerage.name === 'LPT Realty' && result.stockAwardIncome > 0 && (
-                                  <span className="text-xs text-gray-500 ml-1">(estimated)</span>
+                                  <span className="text-xs text-gray-500 ml-1">(est.)</span>
+                                )}
+                                {result.brokerage.name === 'Epique Realty' && result.stockAwardIncome > 0 && (
+                                  <span className="text-xs text-gray-500 ml-1">(pre-IPO)</span>
                                 )}
                               </span>
                             </div>
@@ -2980,7 +3210,10 @@ export default function Calculator() {
                                     <div className="text-sm font-bold text-purple-600">
                                       {formatCurrency(result.stockAwardIncome)}
                                       {result.brokerage.name === 'LPT Realty' && result.stockAwardIncome > 0 && (
-                                        <div className="text-xs text-gray-500">(estimated)</div>
+                                        <div className="text-xs text-gray-500">(est.)</div>
+                                      )}
+                                      {result.brokerage.name === 'Epique Realty' && result.stockAwardIncome > 0 && (
+                                        <div className="text-xs text-gray-500">(pre-IPO)</div>
                                       )}
                                     </div>
                                   </td>

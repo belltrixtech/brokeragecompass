@@ -7,8 +7,102 @@ export default function RealBrokerageCalculator() {
   const [gci, setGci] = useState(80000)
   const [transactions, setTransactions] = useState(20)
   const [recruits, setRecruits] = useState(0)
-  const [isHighProducer, setIsHighProducer] = useState(false)
+  const [sppParticipation, setSppParticipation] = useState(true)
   
+  // Complete Real Brokerage stock awards calculation
+  const calculateRealStockAwards = (gci, transactions, sppParticipation = false, recruits = 0) => {
+    let totalStockAwards = 0;
+    let eliteAgent = false;
+    let cappingAward = 0;
+    let sppBonusShares = 0;
+    let eliteAward = 0;
+    let culturalAward = 0;
+    let recruitmentAwards = 0;
+    
+    // 1. CAPPING AWARD - Available to all agents who reach $12K cap
+    const companySplit = Math.min(gci * 0.15, 12000);
+    const agentCaps = companySplit >= 12000;
+    
+    if (agentCaps) {
+      cappingAward = 4000; // $4,000 stock award for reaching cap
+    }
+    
+    // 2. STOCK PURCHASE PLAN (SPP) BONUS SHARES
+    if (sppParticipation && gci > 0) {
+      const gciToCap = 12000 / 0.15; // $80,000 GCI to cap
+      
+      if (agentCaps) {
+        // Pre-cap: 5% contribution + 10% bonus
+        const preCapGci = Math.min(gci, gciToCap);
+        const preCapContribution = preCapGci * 0.05;
+        const preCapBonus = preCapContribution * 0.10;
+        
+        // Post-cap: 10% contribution + 15% bonus (up to $15K annual limit)
+        const postCapGci = Math.max(0, gci - gciToCap);
+        const postCapContribution = Math.min(postCapGci * 0.10, 15000);
+        const postCapBonus = postCapContribution * 0.15;
+        
+        sppBonusShares = preCapBonus + postCapBonus;
+      } else {
+        // Pre-cap only: 5% contribution + 10% bonus
+        const preCapContribution = gci * 0.05;
+        sppBonusShares = preCapContribution * 0.10;
+      }
+    }
+    
+    // 3. ELITE AGENT AWARD - $16K for high producers
+    if (agentCaps) {
+      // Path 1: Post-cap production method
+      const gciToCap = 12000 / 0.15; // $80,000 GCI to cap
+      const postCapGci = Math.max(0, gci - gciToCap);
+      
+      if (postCapGci > 0) {
+        const avgCommission = gci / transactions;
+        const postCapTransactions = Math.floor(postCapGci / avgCommission);
+        const postCapFees = postCapTransactions * 285; // $285 per transaction
+        
+        // Check if $6K in post-cap fees achieved
+        if (postCapFees >= 6000) {
+          eliteAgent = true;
+          eliteAward = 16000;
+        }
+      }
+    }
+    
+    // Path 2: High GCI alternative ($500K+ GCI, 10+ transactions)
+    if (!eliteAgent && gci >= 500000 && transactions >= 10) {
+      eliteAgent = true;
+      eliteAward = 16000;
+    }
+    
+    // 4. CULTURAL CONTRIBUTION AWARD - Additional $8K for Elite agents
+    if (eliteAgent) {
+      culturalAward = 8000; // Available for teaching at Real Academy
+    }
+    
+    // 5. AGENT RECRUITMENT AWARDS - $500-$2000 per qualified recruit
+    if (recruits > 0) {
+      recruitmentAwards = recruits * 1000; // Average $1K per recruit (varies by production)
+    }
+    
+    // Calculate total stock awards
+    totalStockAwards = cappingAward + sppBonusShares + eliteAward + culturalAward + recruitmentAwards;
+    
+    return {
+      totalStockAwards,
+      breakdown: {
+        cappingAward,
+        sppBonusShares: Math.round(sppBonusShares),
+        eliteAward,
+        culturalAward,
+        recruitmentAwards
+      },
+      eliteAgent,
+      eliteTransactionFee: eliteAgent ? 129 : 285,
+      agentCaps
+    };
+  };
+
   // Real Brokerage specific calculations with correct fee structure
   const calculateRealEarnings = () => {
     // Constants based on official Real Brokerage documentation
@@ -18,6 +112,10 @@ export default function RealBrokerageCalculator() {
     const ANNUAL_FEE = 750
     const POST_CAP_TRANSACTION_FEE = 285
     const ELITE_TRANSACTION_FEE = 129
+    
+    // Calculate comprehensive stock awards
+    const stockAwardData = calculateRealStockAwards(gci, transactions, sppParticipation, recruits);
+    const isEliteAgent = stockAwardData.eliteAgent;
     
     // Pre-cap calculations
     const companySplitFees = gci * (1 - COMMISSION_SPLIT) // 15% of GCI
@@ -44,8 +142,8 @@ export default function RealBrokerageCalculator() {
       const avgCommissionPerTransaction = gci / transactions
       const postCapTransactions = Math.floor(postCapGci / avgCommissionPerTransaction)
       
-      // Apply correct transaction fees
-      const transactionFee = isHighProducer ? ELITE_TRANSACTION_FEE : POST_CAP_TRANSACTION_FEE
+      // Apply correct transaction fees - use Elite fee if qualified
+      const transactionFee = isEliteAgent ? ELITE_TRANSACTION_FEE : POST_CAP_TRANSACTION_FEE
       postCapTransactionFees = postCapTransactions * transactionFee
       
       postCapCommission = postCapGci
@@ -63,10 +161,7 @@ export default function RealBrokerageCalculator() {
     // Revenue share calculation (simplified)
     const revenueShare = recruits * 4000 // Up to $4,000 per Tier 1 recruit
     
-    // Stock awards for high producers
-    const stockAwards = isHighProducer && gci >= 250000 ? 16000 : 0
-    
-    const totalAnnualIncome = netIncome + revenueShare + stockAwards
+    const totalAnnualIncome = netIncome + revenueShare + stockAwardData.totalStockAwards
     
     return {
       grossCommissionIncome: gci,
@@ -79,7 +174,10 @@ export default function RealBrokerageCalculator() {
         postCapTransactionFees: postCapTransactionFees
       },
       revenueShare,
-      stockAwards,
+      stockAwards: stockAwardData.totalStockAwards,
+      stockBreakdown: stockAwardData.breakdown,
+      eliteAgent: stockAwardData.eliteAgent,
+      eliteTransactionFee: stockAwardData.eliteTransactionFee,
       netIncome,
       totalAnnualIncome,
       agentCaps,
@@ -154,13 +252,13 @@ export default function RealBrokerageCalculator() {
           <div className="flex items-center">
             <input
               type="checkbox"
-              id="highProducer"
-              checked={isHighProducer}
-              onChange={(e) => setIsHighProducer(e.target.checked)}
+              id="sppParticipation"
+              checked={sppParticipation}
+              onChange={(e) => setSppParticipation(e.target.checked)}
               className="h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-slate-300 rounded"
             />
-            <label htmlFor="highProducer" className="ml-2 block text-sm text-slate-700">
-              High producer (qualify for stock awards)
+            <label htmlFor="sppParticipation" className="ml-2 block text-sm text-slate-700">
+              Participate in Stock Purchase Plan (SPP)
             </label>
           </div>
           
@@ -224,9 +322,43 @@ export default function RealBrokerageCalculator() {
               )}
               
               {results.stockAwards > 0 && (
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-slate-600">Stock Awards</span>
-                  <span className="text-lg font-semibold text-green-600">+${results.stockAwards.toLocaleString()}</span>
+                <div className="mt-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-600">Stock Awards</span>
+                    <span className="text-lg font-semibold text-green-600">+${results.stockAwards.toLocaleString()}</span>
+                  </div>
+                  <div className="ml-4 mt-1 space-y-1 text-sm text-slate-500">
+                    {results.stockBreakdown.cappingAward > 0 && (
+                      <div className="flex justify-between">
+                        <span>├── Capping Award</span>
+                        <span>${results.stockBreakdown.cappingAward.toLocaleString()}</span>
+                      </div>
+                    )}
+                    {results.stockBreakdown.sppBonusShares > 0 && (
+                      <div className="flex justify-between">
+                        <span>├── SPP Bonus Shares</span>
+                        <span>${results.stockBreakdown.sppBonusShares.toLocaleString()}</span>
+                      </div>
+                    )}
+                    {results.stockBreakdown.eliteAward > 0 && (
+                      <div className="flex justify-between">
+                        <span>├── Elite Agent Award</span>
+                        <span>${results.stockBreakdown.eliteAward.toLocaleString()}</span>
+                      </div>
+                    )}
+                    {results.stockBreakdown.culturalAward > 0 && (
+                      <div className="flex justify-between">
+                        <span>├── Cultural Award</span>
+                        <span>${results.stockBreakdown.culturalAward.toLocaleString()}</span>
+                      </div>
+                    )}
+                    {results.stockBreakdown.recruitmentAwards > 0 && (
+                      <div className="flex justify-between">
+                        <span>└── Recruitment Awards</span>
+                        <span>${results.stockBreakdown.recruitmentAwards.toLocaleString()}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
               
@@ -239,7 +371,32 @@ export default function RealBrokerageCalculator() {
             <div className="bg-slate-50 p-3 rounded text-sm text-slate-600">
               <p><strong>Cap Status:</strong> {results.capReachedAt}</p>
               {results.agentCaps && (
-                <p className="mt-1">After capping: 100% commission retention with ${isHighProducer ? '129' : '285'} transaction fee per deal</p>
+                <p className="mt-1">After capping: 100% commission retention with ${results.eliteTransactionFee} transaction fee per deal</p>
+              )}
+              {results.eliteAgent && (
+                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
+                  <p className="text-green-800 font-semibold">🏆 Elite Agent Status Achieved!</p>
+                  <p className="text-green-700 text-xs mt-1">
+                    • $16,000 Elite Agent Award (3-year vesting)
+                  </p>
+                  <p className="text-green-700 text-xs">
+                    • Reduced transaction fee: $129 vs $285
+                  </p>
+                  <p className="text-green-700 text-xs">
+                    • Eligible for $8,000 cultural award
+                  </p>
+                </div>
+              )}
+              {results.stockAwards > 0 && !results.eliteAgent && (
+                <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
+                  <p className="text-blue-800 font-semibold">💰 Stock Awards Earned!</p>
+                  <p className="text-blue-700 text-xs mt-1">
+                    • Capping and/or SPP bonus shares earned
+                  </p>
+                  <p className="text-blue-700 text-xs">
+                    • Continue growing to qualify for Elite status
+                  </p>
+                </div>
               )}
             </div>
           </div>
